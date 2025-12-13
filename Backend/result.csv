@@ -1,0 +1,6 @@
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
+1764608922254,748,Get details of flights,200,OK,Thread Group 1-1,text,true,,845,138,5,5,http://localhost:8080/flight-service/flights,741,0,22
+1764608922527,476,Get details of flights,200,OK,Thread Group 1-3,text,true,,845,138,5,5,http://localhost:8080/flight-service/flights,469,0,1
+1764608922925,78,Get details of flights,200,OK,Thread Group 1-5,text,true,,845,138,5,5,http://localhost:8080/flight-service/flights,71,0,1
+1764608922328,675,Get details of flights,200,OK,Thread Group 1-2,text,true,,845,138,5,5,http://localhost:8080/flight-service/flights,668,0,2
+1764608922727,276,Get details of flights,200,OK,Thread Group 1-4,text,true,,845,138,5,5,http://localhost:8080/flight-service/flights,269,0,2

@@ -1,0 +1,142 @@
+version: "3.9"
+
+services:
+  # =========================
+  # PostgreSQL (shared for all services)
+  # =========================
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=0000
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # =========================
+  # Config Server
+  # =========================
+  config-server:
+    build:
+      context: ./config-server
+    container_name: config-server
+    ports:
+      - "8888:8888"
+    environment:
+      - SPRING_PROFILES_ACTIVE=native
+
+  # =========================
+  # Eureka Server (service-registry)
+  # =========================
+  service-registry:
+    build:
+      context: ./service-registry
+    container_name: service-registry
+    ports:
+      - "8761:8761"
+    environment:
+      - EUREKA_INSTANCE_HOSTNAME=service-registry
+
+  # =========================
+  # API Gateway
+  # =========================
+  api-gateway:
+    build:
+      context: ./api-gateway
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - service-registry
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka
+      - EUREKA_INSTANCE_HOSTNAME=api-gateway
+
+  # =========================
+  # Auth Service
+  # =========================
+  auth-service:
+    build:
+      context: ./auth-service
+    container_name: auth-service
+    ports:
+      - "9000:9000"
+    depends_on:
+      - service-registry
+      - postgres
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/flightapp_auth
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=0000
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka
+      - EUREKA_INSTANCE_HOSTNAME=auth-service
+
+  # =========================
+  # Booking Service
+  # =========================
+  booking-service:
+    build:
+      context: ./booking-service
+    container_name: booking-service
+    ports:
+      - "8082:8082"
+    depends_on:
+      - service-registry
+      - postgres
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/bookingdb
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=0000
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka
+      - EUREKA_INSTANCE_HOSTNAME=booking-service
+      - SPRING_RABBITMQ_HOST=host.docker.internal
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=guest
+      - SPRING_RABBITMQ_PASSWORD=guest
+
+  # =========================
+  # Flight Service
+  # =========================
+  flight-service:
+    build:
+      context: ./flight-service
+    container_name: flight-service
+    ports:
+      - "8081:8081"
+    depends_on:
+      - service-registry
+      - postgres
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/flightdb
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=0000
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka
+      - EUREKA_INSTANCE_HOSTNAME=flight-service
+
+  # =========================
+  # Email Service
+  # =========================
+  email-service:
+    build:
+      context: ./email-service
+    container_name: email-service
+    ports:
+      - "8085:8085"
+    depends_on:
+      - service-registry
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka
+      - EUREKA_INSTANCE_HOSTNAME=email-service
+      - SPRING_RABBITMQ_HOST=host.docker.internal
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=guest
+      - SPRING_RABBITMQ_PASSWORD=guest
+      - MAILTRAP_HOST=${MAILTRAP_HOST}
+      - MAILTRAP_PORT=${MAILTRAP_PORT}
+      - MAILTRAP_USERNAME=${MAILTRAP_USERNAME}
+      - MAILTRAP_PASSWORD=${MAILTRAP_PASSWORD}
+
+volumes:
+  postgres_data:

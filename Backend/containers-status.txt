@@ -1,0 +1,9 @@
+NAMES              STATUS         PORTS
+booking-service    Up 7 minutes   0.0.0.0:8082->8082/tcp, [::]:8082->8082/tcp
+flight-service     Up 7 minutes   0.0.0.0:8081->8081/tcp, [::]:8081->8081/tcp
+email-service      Up 7 minutes   0.0.0.0:8085->8085/tcp, [::]:8085->8085/tcp
+auth-service       Up 7 minutes   0.0.0.0:9000->9000/tcp, [::]:9000->9000/tcp
+api-gateway        Up 7 minutes   0.0.0.0:8080->8080/tcp, [::]:8080->8080/tcp
+postgres           Up 7 minutes   0.0.0.0:5433->5432/tcp, [::]:5433->5432/tcp
+service-registry   Up 7 minutes   0.0.0.0:8761->8761/tcp, [::]:8761->8761/tcp
+config-server      Up 7 minutes   0.0.0.0:8888->8888/tcp, [::]:8888->8888/tcp
