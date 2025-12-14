@@ -1,0 +1,21 @@
+<header class="header">
+  <div class="header-content">
+    <div class="logo" routerLink="/">
+      <span class="logo-icon">✈</span>
+      <span class="logo-text">FlightApp</span>
+    </div>
+    
+    <nav class="nav">
+      <div *ngIf="!isAuthenticated" class="auth-buttons">
+        <a routerLink="/login" class="btn btn-outline">Login</a>
+        <a routerLink="/signup" class="btn btn-primary">Sign Up</a>
+      </div>
+      
+      <div *ngIf="isAuthenticated" class="user-menu">
+        <span class="username">Welcome, {{ username }}</span>
+        <button (click)="logout()" class="btn btn-outline">Logout</button>
+      </div>
+    </nav>
+  </div>
+</header>
+
