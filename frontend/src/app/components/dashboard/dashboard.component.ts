@@ -78,7 +78,7 @@ export class DashboardComponent implements OnInit {
     
     this.flightService.searchFlights(searchRequest).subscribe({
       next: (flights) => {
-        console.log('✅ Search successful! Results:', flights);
+        console.log(' Search successful! Results:', flights);
         this.searchResults = flights;
         this.showAllFlights = false;
         this.isSearching = false;
@@ -90,7 +90,7 @@ export class DashboardComponent implements OnInit {
         }
       },
       error: (error) => {
-        console.error('❌ Error searching flights:', error);
+        console.error(' Error searching flights:', error);
         console.error('Error status:', error.status);
         console.error('Error statusText:', error.statusText);
         console.error('Error URL:', error.url);
