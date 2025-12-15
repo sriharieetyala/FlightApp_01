@@ -7,22 +7,31 @@ import { filter } from 'rxjs/operators';
 @Component({
   selector: 'app-header',
   standalone: true,
+  // RouterModule is needed for routerLink and navigation-related features
   imports: [CommonModule, RouterModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
 export class HeaderComponent implements OnInit {
+
+  // Tracks whether the user is logged in
   isAuthenticated: boolean = false;
+
+  // Holds the logged-in username for display in header
   username: string | null = null;
 
+  // AuthService handles authentication logic
+  // Router is used for navigation and listening to route changes
   constructor(
     private authService: AuthService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
+    // Initial auth check when header loads
     this.checkAuthStatus();
-    // Update auth status on route changes
+
+    // Updates authentication state whenever route changes
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe(() => {
@@ -30,16 +39,19 @@ export class HeaderComponent implements OnInit {
       });
   }
 
+  // Syncs header state with authentication status
   checkAuthStatus(): void {
     this.isAuthenticated = this.authService.isAuthenticated();
     this.username = this.authService.getUsername();
   }
 
   logout(): void {
+    // Clears auth data and updates UI state
     this.authService.logout();
     this.isAuthenticated = false;
     this.username = null;
+
+    // Redirects user to home/login page after logout
     this.router.navigate(['/']);
   }
 }
-
