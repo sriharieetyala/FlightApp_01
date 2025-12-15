@@ -14,6 +14,12 @@ services:
       - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
 
   # =========================
   # Config Server
@@ -26,6 +32,7 @@ services:
       - "8888:8888"
     environment:
       - SPRING_PROFILES_ACTIVE=native
+    restart: unless-stopped
 
   # =========================
   # Eureka Server (service-registry)
@@ -38,6 +45,13 @@ services:
       - "8761:8761"
     environment:
       - EUREKA_INSTANCE_HOSTNAME=service-registry
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8761/actuator/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    restart: unless-stopped
 
   # =========================
   # API Gateway
@@ -49,10 +63,12 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - service-registry
+      service-registry:
+        condition: service_healthy
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka
       - EUREKA_INSTANCE_HOSTNAME=api-gateway
+    restart: unless-stopped
 
   # =========================
   # Auth Service
@@ -64,14 +80,17 @@ services:
     ports:
       - "9000:9000"
     depends_on:
-      - service-registry
-      - postgres
+      service-registry:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/flightapp_auth
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=0000
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka
       - EUREKA_INSTANCE_HOSTNAME=auth-service
+    restart: unless-stopped
 
   # =========================
   # Booking Service
@@ -83,8 +102,10 @@ services:
     ports:
       - "8082:8082"
     depends_on:
-      - service-registry
-      - postgres
+      service-registry:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/bookingdb
       - SPRING_DATASOURCE_USERNAME=postgres
@@ -95,6 +116,7 @@ services:
       - SPRING_RABBITMQ_PORT=5672
       - SPRING_RABBITMQ_USERNAME=guest
       - SPRING_RABBITMQ_PASSWORD=guest
+    restart: unless-stopped
 
   # =========================
   # Flight Service
@@ -106,14 +128,17 @@ services:
     ports:
       - "8081:8081"
     depends_on:
-      - service-registry
-      - postgres
+      service-registry:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/flightdb
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=0000
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka
       - EUREKA_INSTANCE_HOSTNAME=flight-service
+    restart: unless-stopped
 
   # =========================
   # Email Service
@@ -125,7 +150,8 @@ services:
     ports:
       - "8085:8085"
     depends_on:
-      - service-registry
+      service-registry:
+        condition: service_healthy
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka
       - EUREKA_INSTANCE_HOSTNAME=email-service
@@ -137,6 +163,7 @@ services:
       - MAILTRAP_PORT=${MAILTRAP_PORT}
       - MAILTRAP_USERNAME=${MAILTRAP_USERNAME}
       - MAILTRAP_PASSWORD=${MAILTRAP_PASSWORD}
+    restart: unless-stopped
 
 volumes:
   postgres_data:
