@@ -7,46 +7,64 @@ import { Flight, SearchFlightRequest } from '../../models/flight.models';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
+  // CommonModule and FormsModule are required for structural directives and ngModel
   imports: [CommonModule, FormsModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
 export class DashboardComponent implements OnInit {
+
+  // Holds all flights fetched on initial load
   flights: Flight[] = [];
+
+  // Stores flights returned from search operation
   searchResults: Flight[] = [];
+
+  // Controls search/loading state in UI
   isSearching = false;
+
+  // Used to switch between all flights and search results
   showAllFlights = true;
+
+  // Displays error-related feedback
   errorMessage: string = '';
+
+  // Displays user-friendly informational messages
   infoMessage: string = '';
 
+  // Bound to the search form inputs
   searchForm: SearchFlightRequest = {
     fromCity: '',
     toCity: '',
     travelDate: ''
   };
 
+  // FlightService is injected to interact with backend APIs
   constructor(private flightService: FlightService) {}
 
+  // Loads flight data when the dashboard initializes
   ngOnInit(): void {
     this.loadAllFlights();
   }
 
   loadAllFlights(): void {
+    // Reset UI messages before API call
     this.errorMessage = '';
     this.infoMessage = '';
+
+    // Fetches all flights from backend
     this.flightService.getAllFlights().subscribe({
       next: (flights) => {
-        console.log('Loaded flights:', flights);
         this.flights = flights;
         this.showAllFlights = true;
+
+        // Handles empty flight list scenario
         if (flights.length === 0) {
           this.infoMessage = 'No flights available at the moment.';
         }
       },
       error: (error) => {
-        console.error('Error loading flights:', error);
-        console.error('Error status:', error.status);
-        console.error('Error details:', error.error);
+        // Status 0 usually indicates backend/network issue
         if (error.status === 0) {
           this.errorMessage = 'Cannot connect to server. Please ensure the backend is running on port 8080.';
         } else {
@@ -57,6 +75,7 @@ export class DashboardComponent implements OnInit {
   }
 
   onSearch(): void {
+    // Basic validation to prevent empty search requests
     if (!this.searchForm.fromCity || !this.searchForm.toCity || !this.searchForm.travelDate) {
       this.errorMessage = 'Please fill in all search fields';
       return;
@@ -66,68 +85,59 @@ export class DashboardComponent implements OnInit {
     this.errorMessage = '';
     this.infoMessage = '';
     
-    // Format date as YYYY-MM-DD for backend (HTML date input already provides this format)
+    // Request is formatted to match backend expectations
     const searchRequest: SearchFlightRequest = {
       fromCity: this.searchForm.fromCity.trim().toUpperCase(),
       toCity: this.searchForm.toCity.trim().toUpperCase(),
-      travelDate: this.searchForm.travelDate // Already in YYYY-MM-DD format from date input
+      travelDate: this.searchForm.travelDate
     };
-
-    console.log('Searching with:', searchRequest);
-    console.log('Full request URL will be: /flight-service/flights/search');
     
+    // Executes flight search based on user criteria
     this.flightService.searchFlights(searchRequest).subscribe({
       next: (flights) => {
-        console.log(' Search successful! Results:', flights);
         this.searchResults = flights;
         this.showAllFlights = false;
         this.isSearching = false;
-        this.errorMessage = '';
+
+        // Feedback based on search result count
         if (flights.length === 0) {
-          this.infoMessage = 'No flights available for your search criteria. Please try different dates or cities.';
+          this.infoMessage = 'No flights available for your search criteria.';
         } else {
           this.infoMessage = `Found ${flights.length} flight(s) matching your search.`;
         }
       },
       error: (error) => {
-        console.error(' Error searching flights:', error);
-        console.error('Error status:', error.status);
-        console.error('Error statusText:', error.statusText);
-        console.error('Error URL:', error.url);
-        console.error('Error details:', error.error);
         this.isSearching = false;
         
-        // Handle 404 as "no flights found" - this is the expected behavior when search returns no results
+        // 404 is treated as a valid "no data" response from backend
         if (error.status === 404) {
-          // Check if it's a flight not found error (from backend) or actual endpoint not found
-          const errorMessage = error.error || error.message || '';
-          if (errorMessage.includes('No flights found') || errorMessage.includes('Flight Not Found')) {
-            // This is a valid "no flights" response - show friendly message
-            this.errorMessage = '';
-            this.infoMessage = 'No flights available for your search criteria. Please try different dates or cities.';
-            this.searchResults = []; // Clear any previous results
-            this.showAllFlights = false;
-          } else {
-            // This is an actual endpoint error
-            this.errorMessage = 'Search endpoint not found. Please check if the backend is properly configured.';
-          }
-        } else if (error.status === 0 || error.status === undefined) {
+          this.errorMessage = '';
+          this.infoMessage = 'No flights available for your search criteria.';
+          this.searchResults = [];
+          this.showAllFlights = false;
+        } 
+        // Handles backend down or connectivity issues
+        else if (error.status === 0 || error.status === undefined) {
           this.errorMessage = 'Cannot connect to server. Please ensure the backend is running on port 8080.';
-        } else if (error.status === 400) {
-          this.errorMessage = error.error?.message || 'Invalid search criteria. Please check your input.';
+        } 
+        // Handles common backend error cases
+        else if (error.status === 400) {
+          this.errorMessage = 'Invalid search criteria. Please check your input.';
         } else if (error.status === 500) {
           this.errorMessage = 'Server error. Please check backend logs.';
         } else {
-          this.errorMessage = error.error?.message || `Error (${error.status}): ${error.statusText || 'Unknown error'}`;
+          this.errorMessage = `Error (${error.status}) occurred while searching flights.`;
         }
       }
     });
   }
 
+  // Determines which flight list should be rendered in UI
   getDisplayFlights(): Flight[] {
     return this.showAllFlights ? this.flights : this.searchResults;
   }
 
+  // Formats date for consistent display
   formatDate(dateString: string): string {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', { 
@@ -139,4 +149,3 @@ export class DashboardComponent implements OnInit {
     });
   }
 }
-
