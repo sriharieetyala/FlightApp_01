@@ -16,40 +16,68 @@
         <div *ngIf="infoMessage && !isSearching" class="info-message">
           {{ infoMessage }}
         </div>
+        <div *ngIf="sameCityError" class="same-city-error">
+          {{ sameCityError }}
+        </div>
         <div class="form-row">
-          <div class="form-group">
+          <div class="form-group autocomplete-container">
             <label for="fromCity">From</label>
-            <input 
-              type="text" 
-              id="fromCity" 
-              [(ngModel)]="searchForm.fromCity" 
+            <input
+              type="text"
+              id="fromCity"
+              [(ngModel)]="searchForm.fromCity"
               name="fromCity"
               placeholder="Departure city (e.g., HYD)"
+              (input)="onFromCityInput()"
+              (focus)="onFromFocus()"
+              (blur)="onFromBlur()"
+              autocomplete="off"
               required
             />
+            <div *ngIf="showFromDropdown && filteredFromCities.length > 0" class="autocomplete-dropdown">
+              <div
+                *ngFor="let city of filteredFromCities"
+                class="autocomplete-item"
+                (mousedown)="selectFromCity(city)">
+                {{ city }}
+              </div>
+            </div>
           </div>
-          <div class="form-group">
+          <div class="form-group autocomplete-container">
             <label for="toCity">To</label>
-            <input 
-              type="text" 
-              id="toCity" 
-              [(ngModel)]="searchForm.toCity" 
+            <input
+              type="text"
+              id="toCity"
+              [(ngModel)]="searchForm.toCity"
               name="toCity"
               placeholder="Destination city (e.g., VIJ)"
+              (input)="onToCityInput()"
+              (focus)="onToFocus()"
+              (blur)="onToBlur()"
+              autocomplete="off"
               required
             />
+            <div *ngIf="showToDropdown && filteredToCities.length > 0" class="autocomplete-dropdown">
+              <div
+                *ngFor="let city of filteredToCities"
+                class="autocomplete-item"
+                (mousedown)="selectToCity(city)">
+                {{ city }}
+              </div>
+            </div>
           </div>
           <div class="form-group">
             <label for="travelDate">Travel Date</label>
-            <input 
-              type="date" 
-              id="travelDate" 
-              [(ngModel)]="searchForm.travelDate" 
+            <input
+              type="date"
+              id="travelDate"
+              [(ngModel)]="searchForm.travelDate"
               name="travelDate"
+              [min]="minDate"
               required
             />
           </div>
-          <button type="submit" class="search-btn" [disabled]="isSearching">
+          <button type="submit" class="search-btn" [disabled]="isSearching || !isFormValid()">
             {{ isSearching ? 'Searching...' : 'Search Flights' }}
           </button>
         </div>
@@ -63,7 +91,7 @@
   <div class="flights-section">
     <h2 *ngIf="showAllFlights" class="section-title">All Available Flights</h2>
     <h2 *ngIf="!showAllFlights" class="section-title">Search Results</h2>
-    
+
     <div *ngIf="getDisplayFlights().length === 0 && !isSearching" class="no-flights">
       <p *ngIf="showAllFlights">No flights available at the moment.</p>
       <p *ngIf="!showAllFlights">No flights available for your search criteria.</p>
@@ -91,9 +119,53 @@
             <span class="seats-label">Seats Available:</span>
             <span class="seats-count">{{ flight.seatsAvailable }}</span>
           </div>
+          <button (click)="openBooking(flight)">Book</button>
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- Simple Booking Form -->
+  <div *ngIf="showBookingForm">
+    <hr>
+    <h3>Book Flight</h3>
+
+    <p>Flight: {{ selectedFlight?.flightNumber }}</p>
+    <p>Route: {{ selectedFlight?.fromCity }} to {{ selectedFlight?.toCity }}</p>
+    <p>Price: {{ selectedFlight?.cost }} Rs</p>
+
+    <br>
+
+    Name: <input type="text" [(ngModel)]="bookingForm.passengerName" name="passengerName">
+    <br><br>
+
+    Age: <input type="number" [(ngModel)]="bookingForm.age" name="age">
+    <br><br>
+
+    Gender:
+    <select [(ngModel)]="bookingForm.gender" name="gender">
+      <option value="MALE">Male</option>
+      <option value="FEMALE">Female</option>
+      <option value="OTHER">Other</option>
+    </select>
+    <br><br>
+
+    Meal:
+    <select [(ngModel)]="bookingForm.meal" name="meal">
+      <option value="VEG">Veg</option>
+      <option value="NONVEG">Non-Veg</option>
+      <option value="NONE">None</option>
+    </select>
+    <br><br>
+
+    Email: <input type="email" [(ngModel)]="bookingForm.email" name="email">
+    <br><br>
+
+    Tickets: <input type="number" [(ngModel)]="bookingForm.numberOfTickets" name="numberOfTickets">
+    <br><br>
+
+    <button (click)="submitBooking()">Confirm Booking</button>
+    <button (click)="closeBooking()">Cancel</button>
   </div>
 </div>
 

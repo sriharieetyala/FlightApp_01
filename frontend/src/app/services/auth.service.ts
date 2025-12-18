@@ -7,8 +7,8 @@ import { LoginRequest, LoginResponse, SignupRequest, SignupResponse } from '../m
   providedIn: 'root'
 })
 export class AuthService {
-  // Using relative URL to work with Angular proxy
-  private apiUrl = '/auth';
+  // Direct URL to API Gateway (CORS enabled)
+  private apiUrl = 'http://localhost:8080/auth';
 
   constructor(private http: HttpClient) {}
 

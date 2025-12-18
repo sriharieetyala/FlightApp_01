@@ -268,3 +268,51 @@
   }
 }
 
+/* Autocomplete dropdown styles */
+.autocomplete-container {
+  position: relative;
+}
+
+.autocomplete-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 2px solid #667eea;
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.autocomplete-item {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.autocomplete-item:hover {
+  background-color: #f0f4ff;
+  color: #667eea;
+}
+
+.autocomplete-item:not(:last-child) {
+  border-bottom: 1px solid #eee;
+}
+
+/* Same city validation error */
+.same-city-error {
+  background: #fff3cd;
+  color: #856404;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  border: 1px solid #ffc107;
+  margin-bottom: 1rem;
+}
+

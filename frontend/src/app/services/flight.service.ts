@@ -7,8 +7,8 @@ import { Flight, SearchFlightRequest } from '../models/flight.models';
   providedIn: 'root'
 })
 export class FlightService {
-  // Direct URL - proxy will handle routing
-  private apiUrl = '/flight-service/flights';
+  // Direct URL to API Gateway (CORS enabled)
+  private apiUrl = 'http://localhost:8080/flight-service/flights';
 
   constructor(private http: HttpClient) {}
 
