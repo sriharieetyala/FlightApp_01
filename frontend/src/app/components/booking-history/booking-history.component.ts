@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
-import { BookingService, Booking } from '../../services/booking.service';
+import { BookingHistoryService, BookingHistory } from '../../services/booking-history.service';
 
 @Component({
   selector: 'app-booking-history',
@@ -12,25 +11,28 @@ import { BookingService, Booking } from '../../services/booking.service';
   styleUrl: './booking-history.component.css'
 })
 export class BookingHistoryComponent implements OnInit {
-  bookings: Booking[] = [];
+  bookings: BookingHistory[] = [];
   isLoading = true;
   errorMessage = '';
 
   constructor(
-    private readonly authService: AuthService,
-    private readonly bookingService: BookingService,
+    private readonly bookingHistoryService: BookingHistoryService,
     private readonly router: Router
   ) {}
 
   ngOnInit(): void {
-    const email = this.authService.getEmail();
+    const email = this.bookingHistoryService.getUserEmail();
 
     if (!email) {
       this.isLoading = false;
       return;
     }
 
-    this.bookingService.getBookingsByEmail(email).subscribe({
+    this.loadBookings();
+  }
+
+  loadBookings(): void {
+    this.bookingHistoryService.getMyBookings().subscribe({
       next: (bookings) => {
         this.bookings = bookings;
         this.isLoading = false;
