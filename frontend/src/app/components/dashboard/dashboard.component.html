@@ -119,53 +119,10 @@
             <span class="seats-label">Seats Available:</span>
             <span class="seats-count">{{ flight.seatsAvailable }}</span>
           </div>
-          <button (click)="openBooking(flight)">Book</button>
+          <button class="book-btn" (click)="openBooking(flight)">Book Now</button>
         </div>
       </div>
     </div>
-  </div>
-
-  <!-- Simple Booking Form -->
-  <div *ngIf="showBookingForm">
-    <hr>
-    <h3>Book Flight</h3>
-
-    <p>Flight: {{ selectedFlight?.flightNumber }}</p>
-    <p>Route: {{ selectedFlight?.fromCity }} to {{ selectedFlight?.toCity }}</p>
-    <p>Price: {{ selectedFlight?.cost }} Rs</p>
-
-    <br>
-
-    Name: <input type="text" [(ngModel)]="bookingForm.passengerName" name="passengerName">
-    <br><br>
-
-    Age: <input type="number" [(ngModel)]="bookingForm.age" name="age">
-    <br><br>
-
-    Gender:
-    <select [(ngModel)]="bookingForm.gender" name="gender">
-      <option value="MALE">Male</option>
-      <option value="FEMALE">Female</option>
-      <option value="OTHER">Other</option>
-    </select>
-    <br><br>
-
-    Meal:
-    <select [(ngModel)]="bookingForm.meal" name="meal">
-      <option value="VEG">Veg</option>
-      <option value="NONVEG">Non-Veg</option>
-      <option value="NONE">None</option>
-    </select>
-    <br><br>
-
-    Email: <input type="email" [(ngModel)]="bookingForm.email" name="email">
-    <br><br>
-
-    Tickets: <input type="number" [(ngModel)]="bookingForm.numberOfTickets" name="numberOfTickets">
-    <br><br>
-
-    <button (click)="submitBooking()">Confirm Booking</button>
-    <button (click)="closeBooking()">Cancel</button>
   </div>
 </div>
 

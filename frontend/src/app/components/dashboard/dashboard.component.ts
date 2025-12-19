@@ -1,16 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { FlightService } from '../../services/flight.service';
 import { Flight, SearchFlightRequest } from '../../models/flight.models';
-import {HttpClient} from '@angular/common/http';
 
 
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  // CommonModule and FormsModule are required for structural directives and ngModel
   imports: [CommonModule, FormsModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
@@ -59,13 +58,11 @@ export class DashboardComponent implements OnInit {
     travelDate: ''
   };
 
-  // FlightService is injected to interact with backend APIs
   constructor(
     private readonly flightService: FlightService,
-    private readonly http: HttpClient
+    private readonly router: Router
   ) {}
 
-  // Loads flight data when the dashboard initializes
   ngOnInit(): void {
     this.setMinDate();
     this.loadAllFlights();
@@ -281,39 +278,8 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  // ====== BOOKING ======
-  showBookingForm = false;
-  selectedFlight: Flight | null = null;
-  bookingForm = {
-    flightId: 0,
-    passengerName: '',
-    age: 0,
-    gender: 'MALE',
-    meal: 'NONE',
-    email: '',
-    numberOfTickets: 1
-  };
-
+  // Navigate to booking page
   openBooking(flight: Flight): void {
-    this.selectedFlight = flight;
-    this.bookingForm.flightId = flight.id;
-    this.showBookingForm = true;
-  }
-
-  closeBooking(): void {
-    this.showBookingForm = false;
-  }
-
-  submitBooking(): void {
-    this.http.post('http://localhost:8080/booking-service/bookings', this.bookingForm).subscribe({
-      next: (res: any) => {
-        alert('Booking success! PNR: ' + res.pnr);
-        this.showBookingForm = false;
-        this.loadAllFlights();
-      },
-      error: () => {
-        alert('Booking failed. Please try again.');
-      }
-    });
+    this.router.navigate(['/booking', flight.id]);
   }
 }
