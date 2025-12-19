@@ -17,6 +17,19 @@ export interface BookingResponse{
 pnr: string;
 }
 
+export interface Booking {
+  id: number;
+  flightId: number;
+  passengerName: string;
+  age: number;
+  gender: string;
+  meal: string;
+  email: string;
+  numberOfTickets: number;
+  status: string;
+  pnr: string;
+}
+
 
 @Injectable({
   providedIn:'root'
@@ -38,5 +51,9 @@ getFlightById(id:number):Observable<Flight>{
 
 createBooking(booking:BookingRequest):Observable<BookingResponse>{
   return this.http.post<BookingResponse>(this.bookingApiUrl,booking);
+}
+
+getBookingsByEmail(email: string): Observable<Booking[]> {
+  return this.http.get<Booking[]>(`${this.bookingApiUrl}/email/${email}`);
 }
 }

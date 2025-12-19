@@ -34,6 +34,14 @@ public class UserService {
             );
         }
 
+        // I checked if the email already exists; if yes, I throw 400 BAD_REQUEST
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Email already exists"
+            );
+        }
+
         // I set the default role as USER; only if correct secret is provided, I mark the user as ADMIN
         String role = "USER";
         if (request.getAdminSecret() != null &&
@@ -44,6 +52,7 @@ public class UserService {
         // I created a new User object and encoded the password before saving to the database
         User user = User.builder()
                 .username(request.getUsername())
+                .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(role)
                 .build();
@@ -76,7 +85,7 @@ public class UserService {
         // I generated a JWT token for the successfully authenticated user
         String token = jwtService.generateToken(user);
 
-        // I returned the login response with token and user info
-        return new LoginResponse(token, user.getUsername(), user.getRole());
+        // I returned the login response with token and user info including email
+        return new LoginResponse(token, user.getUsername(), user.getEmail(), user.getRole());
     }
 }

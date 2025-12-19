@@ -18,6 +18,7 @@ export class SignupComponent {
   // Holds user input for signup request
   signupForm: SignupRequest = {
     username: '',
+    email: '',
     password: '',
     adminSecret: ''
   };
@@ -42,8 +43,15 @@ export class SignupComponent {
 
   onSubmit(): void {
     // Basic validation to avoid empty requests
-    if (!this.signupForm.username || !this.signupForm.password) {
+    if (!this.signupForm.username || !this.signupForm.email || !this.signupForm.password) {
       this.errorMessage = 'Please fill in all required fields';
+      return;
+    }
+
+    // Validates email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(this.signupForm.email)) {
+      this.errorMessage = 'Please enter a valid email address';
       return;
     }
 
@@ -66,6 +74,7 @@ export class SignupComponent {
     // Constructs request object and excludes adminSecret if not provided
     const request: SignupRequest = {
       username: this.signupForm.username,
+      email: this.signupForm.email,
       password: this.signupForm.password
     };
 
@@ -94,11 +103,11 @@ export class SignupComponent {
         // Handles backend or network failure
         if (error.status === 0) {
           this.errorMessage = 'Cannot connect to server. Please ensure the backend is running on port 8080.';
-        } 
+        }
         // Handles validation or duplicate user errors
         else if (error.status === 400) {
           this.errorMessage = error.error?.message || error.error || 'Failed to create account. Username may already exist.';
-        } 
+        }
         // Generic fallback for unexpected errors
         else {
           this.errorMessage = error.error?.message || error.message || 'An error occurred. Please try again.';

@@ -1,0 +1,47 @@
+<div class="booking-history-page">
+  <div class="booking-history-container">
+    <button class="back-btn" (click)="goBack()">← Back</button>
+
+    <h1>Booking History</h1>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading">Loading your bookings...</div>
+
+    <!-- Error State -->
+    <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+
+    <!-- No Bookings -->
+    <div *ngIf="!isLoading && !errorMessage && bookings.length === 0" class="no-bookings">
+      <p>No booking history found.</p>
+      <p>Book your first flight to see it here!</p>
+    </div>
+
+    <!-- Booking Cards -->
+    <div *ngIf="!isLoading && bookings.length > 0" class="bookings-list">
+      <div class="booking-card" *ngFor="let booking of bookings">
+        <div class="booking-header">
+          <span class="pnr">PNR: {{ booking.pnr }}</span>
+          <span class="status" [ngClass]="booking.status === 'BOOKED' ? 'status-booked' : 'status-cancelled'">
+            {{ booking.status }}
+          </span>
+        </div>
+
+        <div class="booking-details">
+          <p><strong>Passenger:</strong> {{ booking.passengerName }}</p>
+          <p><strong>Flight ID:</strong> {{ booking.flightId }}</p>
+          <p><strong>Tickets:</strong> {{ booking.numberOfTickets }}</p>
+          <p><strong>Meal:</strong> {{ booking.meal }}</p>
+        </div>
+
+        <div class="booking-actions">
+          <button
+            class="cancel-btn"
+            (click)="cancelBooking(booking.id)"
+            [disabled]="booking.status === 'CANCELLED'">
+            Cancel Booking
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

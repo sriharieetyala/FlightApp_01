@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Flight } from '../../models/flight.models';
 import { BookingService, BookingRequest } from '../../services/booking.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-booking',
@@ -33,10 +34,17 @@ export class BookingComponent implements OnInit {
   constructor(
     private readonly bookingService: BookingService,
     private readonly route: ActivatedRoute,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly authService: AuthService
   ) {}
 
   ngOnInit(): void {
+    // Auto-populate email from logged-in user
+    const userEmail = this.authService.getEmail();
+    if (userEmail) {
+      this.bookingForm.email = userEmail;
+    }
+
     const flightId = this.route.snapshot.paramMap.get('id');
     if (flightId) {
       this.bookingForm.flightId = +flightId;

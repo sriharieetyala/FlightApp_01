@@ -23,6 +23,7 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem('token');
     localStorage.removeItem('username');
+    localStorage.removeItem('email');
     localStorage.removeItem('role');
   }
 
@@ -38,6 +39,10 @@ export class AuthService {
     return localStorage.getItem('username');
   }
 
+  getEmail(): string | null {
+    return localStorage.getItem('email');
+  }
+
   getRole(): string | null {
     return localStorage.getItem('role');
   }
@@ -45,6 +50,7 @@ export class AuthService {
   saveAuthData(response: LoginResponse): void {
     localStorage.setItem('token', response.token);
     localStorage.setItem('username', response.username);
+    localStorage.setItem('email', response.email);
     localStorage.setItem('role', response.role);
   }
 }

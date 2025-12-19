@@ -16,5 +16,9 @@ export const routes: Routes = [
   {
     path: 'booking/:id',
     loadComponent: () => import('./components/booking/booking.component').then(m => m.BookingComponent)
+  },
+  {
+    path: 'booking-history',
+    loadComponent: () => import('./components/booking-history/booking-history.component').then(m => m.BookingHistoryComponent)
   }
 ];

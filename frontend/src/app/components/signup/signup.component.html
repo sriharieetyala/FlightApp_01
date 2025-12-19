@@ -8,10 +8,10 @@
     <form (ngSubmit)="onSubmit()" class="auth-form">
       <div class="form-group">
         <label for="username">Username</label>
-        <input 
-          type="text" 
-          id="username" 
-          [(ngModel)]="signupForm.username" 
+        <input
+          type="text"
+          id="username"
+          [(ngModel)]="signupForm.username"
           name="username"
           placeholder="Choose a username"
           required
@@ -19,11 +19,23 @@
       </div>
 
       <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          [(ngModel)]="signupForm.email"
+          name="email"
+          placeholder="Enter your email"
+          required
+        />
+      </div>
+
+      <div class="form-group">
         <label for="password">Password</label>
-        <input 
-          type="password" 
-          id="password" 
-          [(ngModel)]="signupForm.password" 
+        <input
+          type="password"
+          id="password"
+          [(ngModel)]="signupForm.password"
           name="password"
           placeholder="Create a password (min 6 characters)"
           required
@@ -32,10 +44,10 @@
 
       <div class="form-group">
         <label for="confirmPassword">Confirm Password</label>
-        <input 
-          type="password" 
-          id="confirmPassword" 
-          [(ngModel)]="confirmPassword" 
+        <input
+          type="password"
+          id="confirmPassword"
+          [(ngModel)]="confirmPassword"
           name="confirmPassword"
           placeholder="Confirm your password"
           required
@@ -44,10 +56,10 @@
 
       <div class="form-group">
         <label for="adminSecret">Admin Secret (Optional)</label>
-        <input 
-          type="password" 
-          id="adminSecret" 
-          [(ngModel)]="signupForm.adminSecret" 
+        <input
+          type="password"
+          id="adminSecret"
+          [(ngModel)]="signupForm.adminSecret"
           name="adminSecret"
           placeholder="Admin secret key (optional)"
         />
