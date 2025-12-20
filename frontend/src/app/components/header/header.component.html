@@ -20,3 +20,14 @@
   </div>
 </header>
 
+<!-- Logout Confirmation Dialog -->
+<div *ngIf="showLogoutConfirm" class="logout-overlay">
+  <div class="logout-dialog">
+    <p>Are you sure you want to logout?</p>
+    <div class="logout-actions">
+      <button (click)="cancelLogout()">No</button>
+      <button (click)="confirmLogout()">Yes</button>
+    </div>
+  </div>
+</div>
+

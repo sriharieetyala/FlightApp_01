@@ -24,7 +24,7 @@ public class BookingServiceImpl implements BookingService {
 
     private final BookingRepository repo;
     private final FlightServiceClient flightClient;
-    private final RabbitMQProducer producer;     // ⬅️ ADDED
+    private final RabbitMQProducer producer;     //  ADDED
 
     private static final String FLIGHT_CB = "flightServiceCB";
 

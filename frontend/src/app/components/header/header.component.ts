@@ -20,6 +20,9 @@ export class HeaderComponent implements OnInit {
   // Holds the logged-in username for display in header
   username: string | null = null;
 
+  // Logout confirmation dialog
+  showLogoutConfirm: boolean = false;
+
   // AuthService handles authentication logic
   // Router is used for navigation and listening to route changes
   constructor(
@@ -46,12 +49,18 @@ export class HeaderComponent implements OnInit {
   }
 
   logout(): void {
-    // Clears auth data and updates UI state
+    this.showLogoutConfirm = true;
+  }
+
+  confirmLogout(): void {
     this.authService.logout();
     this.isAuthenticated = false;
     this.username = null;
-
-    // Redirects user to home/login page after logout
+    this.showLogoutConfirm = false;
     this.router.navigate(['/']);
+  }
+
+  cancelLogout(): void {
+    this.showLogoutConfirm = false;
   }
 }

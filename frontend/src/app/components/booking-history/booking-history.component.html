@@ -4,6 +4,9 @@
 
     <h1>Booking History</h1>
 
+    <!-- Success Message -->
+    <div *ngIf="successMessage" class="success-message">{{ successMessage }}</div>
+
     <!-- Loading State -->
     <div *ngIf="isLoading" class="loading">Loading your bookings...</div>
 
@@ -27,20 +30,49 @@
         </div>
 
         <div class="booking-details">
-          <p><strong>Passenger:</strong> {{ booking.passengerName }}</p>
-          <p><strong>Flight ID:</strong> {{ booking.flightId }}</p>
-          <p><strong>Tickets:</strong> {{ booking.numberOfTickets }}</p>
-          <p><strong>Meal:</strong> {{ booking.meal }}</p>
+          <!-- Flight Info -->
+          <div class="flight-info" *ngIf="booking.flight">
+            <p class="flight-route">
+              <strong>{{ booking.flight.fromCity }}</strong>
+              <span class="arrow">→</span>
+              <strong>{{ booking.flight.toCity }}</strong>
+            </p>
+            <p><strong>Flight:</strong> {{ booking.flight.flightNumber }}</p>
+            <p><strong>Departure:</strong> {{ booking.flight.departureTime | date:'medium' }}</p>
+          </div>
+          <div class="flight-info" *ngIf="!booking.flight">
+            <p><strong>Flight ID:</strong> {{ booking.flightId }}</p>
+          </div>
+
+          <!-- Passenger Info -->
+          <div class="passenger-info">
+            <p><strong>Passenger:</strong> {{ booking.passengerName }}</p>
+            <p><strong>Tickets:</strong> {{ booking.numberOfTickets }}</p>
+            <p><strong>Meal:</strong> {{ booking.meal }}</p>
+          </div>
         </div>
 
         <div class="booking-actions">
           <button
             class="cancel-btn"
-            (click)="cancelBooking(booking.id)"
+            (click)="cancelBooking(booking)"
             [disabled]="booking.status === 'CANCELLED'">
-            Cancel Booking
+            {{ booking.status === 'CANCELLED' ? 'Cancelled' : 'Cancel Booking' }}
           </button>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirmation Dialog Overlay -->
+  <div *ngIf="showConfirmDialog" class="confirm-overlay">
+    <div class="confirm-dialog">
+      <p>Are you sure you want to cancel this booking?</p>
+      <div class="confirm-actions">
+        <button class="btn-no" (click)="closeConfirmDialog()" [disabled]="isCancelling">No</button>
+        <button class="btn-yes" (click)="confirmCancel()" [disabled]="isCancelling">
+          {{ isCancelling ? 'Cancelling...' : 'Yes' }}
+        </button>
       </div>
     </div>
   </div>
