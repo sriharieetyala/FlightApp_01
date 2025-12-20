@@ -12,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -106,19 +107,22 @@ class FlightServiceImplTest {
 
     @Test
     void searchFlight_found() {
+        LocalDate travelDate = LocalDate.now().plusDays(1);
+        LocalDateTime startOfDay = travelDate.atStartOfDay();
+        LocalDateTime endOfDay = travelDate.atTime(23, 59, 59);
+
         SearchFlightRequest req = new SearchFlightRequest();
         req.setFromCity("A");
         req.setToCity("B");
+        req.setTravelDate(travelDate);
 
         Flight flight = Flight.builder().id(1).flightNumber("F101").fromCity("A").toCity("B")
-                .departureTime(LocalDateTime.now()).arrivalTime(LocalDateTime.now())
+                .departureTime(travelDate.atTime(10, 0)).arrivalTime(travelDate.atTime(12, 0))
                 .cost(100).seatsAvailable(50).build();
 
-        // repo returns List<Flight>, so stub with a list
-        when(repo.findByFromCityAndToCity("A", "B"))
+        when(repo.findByFromCityAndToCityAndDepartureTimeBetween("A", "B", startOfDay, endOfDay))
                 .thenReturn(List.of(flight));
 
-        // service returns List<FlightResponse>, not a single object
         List<FlightResponse> resList = service.searchFlight(req);
 
         assertNotNull(resList);
@@ -130,12 +134,16 @@ class FlightServiceImplTest {
 
     @Test
     void searchFlight_notFound() {
+        LocalDate travelDate = LocalDate.now().plusDays(1);
+        LocalDateTime startOfDay = travelDate.atStartOfDay();
+        LocalDateTime endOfDay = travelDate.atTime(23, 59, 59);
+
         SearchFlightRequest req = new SearchFlightRequest();
         req.setFromCity("A");
         req.setToCity("B");
+        req.setTravelDate(travelDate);
 
-        // no flights found -> empty list
-        when(repo.findByFromCityAndToCity("A", "B"))
+        when(repo.findByFromCityAndToCityAndDepartureTimeBetween("A", "B", startOfDay, endOfDay))
                 .thenReturn(Collections.emptyList());
 
         assertThrows(FlightNotFoundException.class, () -> service.searchFlight(req));

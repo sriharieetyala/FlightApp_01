@@ -1,7 +1,5 @@
 <div class="booking-page">
   <div class="booking-container">
-    <!-- Back Button -->
-    <button class="back-btn" (click)="goBack()">← Back</button>
 
     <h1>Book Flight</h1>
 
@@ -48,7 +46,7 @@
 
       <div class="form-group">
         <label>Email</label>
-        <input type="email" [(ngModel)]="bookingForm.email" name="email" placeholder="Enter email" readonly />
+        <p class="email-display">{{ bookingForm.email }}</p>
       </div>
 
       <div class="form-group">

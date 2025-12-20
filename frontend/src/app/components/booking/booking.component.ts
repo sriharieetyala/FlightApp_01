@@ -30,6 +30,7 @@ export class BookingComponent implements OnInit {
   isSubmitting = false;
   successMessage = '';
   errorMessage = '';
+  isLoggedIn = false;
 
   constructor(
     private readonly bookingService: BookingService,
@@ -39,10 +40,17 @@ export class BookingComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // Check if user is logged in
+    if (!this.authService.isAuthenticated()) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
     // Auto-populate email from logged-in user
     const userEmail = this.authService.getEmail();
     if (userEmail) {
       this.bookingForm.email = userEmail;
+      this.isLoggedIn = true;
     }
 
     const flightId = this.route.snapshot.paramMap.get('id');
