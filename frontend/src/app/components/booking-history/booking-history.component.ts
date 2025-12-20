@@ -25,7 +25,7 @@ export class BookingHistoryComponent implements OnInit {
   constructor(
     private readonly bookingHistoryService: BookingHistoryService,
     private readonly router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const email = this.bookingHistoryService.getUserEmail();
@@ -41,7 +41,8 @@ export class BookingHistoryComponent implements OnInit {
   loadBookings(): void {
     this.bookingHistoryService.getMyBookings().subscribe({
       next: (bookings) => {
-        this.bookings = bookings;
+        // Sort bookings: BOOKED first (by date, newest first), then CANCELLED (by date, newest first)
+        this.bookings = this.sortBookings(bookings);
         // Fetch flight details for each booking
         this.loadFlightDetails();
       },
@@ -53,6 +54,27 @@ export class BookingHistoryComponent implements OnInit {
           this.errorMessage = 'Failed to load booking history.';
         }
       }
+    });
+  }
+
+  sortBookings(bookings: BookingHistory[]): BookingHistory[] {
+    return bookings.sort((a, b) => {
+      // BOOKED first, CANCELLED at the end
+      if (a.status === 'BOOKED' && b.status === 'CANCELLED') {
+        return -1;
+      }
+      if (a.status === 'CANCELLED' && b.status === 'BOOKED') {
+        return 1;
+      }
+
+      // Within same status, sort by date (newest first)
+      const dateA = a.flight?.departureTime
+        ? new Date(a.flight.departureTime).getTime()
+        : a.id;
+      const dateB = b.flight?.departureTime
+        ? new Date(b.flight.departureTime).getTime()
+        : b.id;
+      return dateB - dateA;
     });
   }
 
@@ -74,6 +96,8 @@ export class BookingHistoryComponent implements OnInit {
         this.bookings.forEach(booking => {
           booking.flight = flights.find(f => f.id === booking.flightId);
         });
+        // Re-sort after flight details are loaded (so we can sort by departure date)
+        this.bookings = this.sortBookings(this.bookings);
         this.isLoading = false;
       },
       error: () => {
@@ -102,11 +126,13 @@ export class BookingHistoryComponent implements OnInit {
     this.isCancelling = true;
     this.bookingHistoryService.cancelBooking(this.bookingToCancel.id).subscribe({
       next: () => {
-        // Update the booking status locally
+        // Update the booking status locally and re-sort
         const booking = this.bookings.find(b => b.id === this.bookingToCancel!.id);
         if (booking) {
           booking.status = 'CANCELLED';
         }
+        // Re-sort after status change
+        this.bookings = this.sortBookings(this.bookings);
         this.successMessage = 'Booking cancelled successfully.';
         this.closeConfirmDialog();
       },

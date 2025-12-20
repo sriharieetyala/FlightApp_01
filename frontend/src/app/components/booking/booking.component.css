@@ -1,22 +1,23 @@
+/* Booking page - Natural minimalist styling */
 .booking-page {
   min-height: 100vh;
-  background: #f5f5f5;
+  background: var(--bg-primary, #faf9f7);
   padding: 40px 20px;
 }
 
 .booking-container {
-  max-width: 500px;
+  max-width: 480px;
   margin: 0 auto;
-  background: #fff;
-  padding: 30px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background: var(--bg-card, white);
+  padding: 28px;
+  border-radius: 12px;
+  border: 1px solid var(--border, #e8e4df);
 }
 
 .back-btn {
   background: none;
   border: none;
-  color: #333;
+  color: var(--accent, #c96442);
   cursor: pointer;
   font-size: 14px;
   padding: 0;
@@ -28,34 +29,35 @@
 }
 
 h1 {
-  font-size: 24px;
-  color: #333;
+  font-size: 1.35rem;
+  color: var(--text-primary, #2d2a26);
   margin: 0 0 20px 0;
   font-weight: 600;
 }
 
 .loading {
-  color: #666;
+  color: var(--text-secondary, #6b6560);
   padding: 20px 0;
 }
 
 .flight-info {
-  background: #f9f9f9;
-  padding: 15px;
-  border-radius: 6px;
-  margin-bottom: 25px;
+  background: var(--bg-primary, #faf9f7);
+  padding: 14px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  border: 1px solid var(--border, #e8e4df);
 }
 
 .flight-info p {
   margin: 5px 0;
-  color: #333;
+  color: var(--text-primary, #2d2a26);
   font-size: 14px;
 }
 
 .booking-form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 18px;
 }
 
 .form-group {
@@ -65,29 +67,30 @@ h1 {
 }
 
 .form-group label {
-  font-size: 14px;
-  color: #333;
+  font-size: 13px;
+  color: var(--text-secondary, #6b6560);
   font-weight: 500;
 }
 
 .form-group input,
 .form-group select {
   padding: 10px 12px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  border: 1px solid var(--border, #e8e4df);
+  border-radius: 8px;
   font-size: 14px;
+  background: var(--bg-card, white);
 }
 
 .form-group input:focus,
 .form-group select:focus {
   outline: none;
-  border-color: #333;
+  border-color: var(--accent, #c96442);
 }
 
 .form-actions {
   display: flex;
   gap: 10px;
-  margin-top: 10px;
+  margin-top: 8px;
 }
 
 .btn-cancel,
@@ -95,58 +98,60 @@ h1 {
   flex: 1;
   padding: 12px;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
 }
 
 .btn-cancel {
-  background: #eee;
-  color: #333;
+  background: var(--border, #e8e4df);
+  color: var(--text-primary, #2d2a26);
 }
 
 .btn-cancel:hover {
-  background: #ddd;
+  background: #ddd9d4;
 }
 
 .btn-submit {
-  background: #333;
-  color: #fff;
+  background: var(--accent, #c96442);
+  color: white;
 }
 
 .btn-submit:hover:not(:disabled) {
-  background: #000;
+  background: var(--accent-hover, #a85236);
 }
 
 .btn-submit:disabled {
-  background: #999;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
 .success-message {
-  background: #e8f5e9;
-  color: #2e7d32;
-  padding: 20px;
-  border-radius: 6px;
+  background: #f4f9f5;
+  color: var(--success, #4a7c59);
+  padding: 18px;
+  border-radius: 8px;
   text-align: center;
+  border-left: 3px solid var(--success, #4a7c59);
 }
 
 .error-message {
-  background: #ffebee;
-  color: #c62828;
+  background: #fdf6f6;
+  color: var(--error, #b54a4a);
   padding: 12px;
-  border-radius: 6px;
-  margin-bottom: 15px;
+  border-radius: 8px;
+  margin-bottom: 14px;
   font-size: 14px;
+  border-left: 3px solid var(--error, #b54a4a);
 }
 
 .email-display {
   padding: 10px 12px;
-  background: #f5f5f5;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  background: var(--bg-primary, #faf9f7);
+  border: 1px solid var(--border, #e8e4df);
+  border-radius: 8px;
   font-size: 14px;
-  color: #555;
+  color: var(--text-secondary, #6b6560);
   margin: 0;
 }
-

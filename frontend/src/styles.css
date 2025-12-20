@@ -1,5 +1,22 @@
 /* You can add global styles to this file, and also import other style files */
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  /* Natural, warm minimalist palette */
+  --bg-primary: #faf9f7;
+  --bg-card: #ffffff;
+  --text-primary: #2d2a26;
+  --text-secondary: #6b6560;
+  --text-muted: #9c9590;
+  --border: #e8e4df;
+  --accent: #c96442;
+  --accent-hover: #a85236;
+  --success: #4a7c59;
+  --error: #b54a4a;
+  --shadow: rgba(45, 42, 38, 0.06);
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -10,4 +27,6 @@ body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: var(--bg-primary);
+  color: var(--text-primary);
 }

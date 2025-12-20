@@ -1,14 +1,7 @@
 <div class="dashboard-container">
-  <div class="hero-section">
-    <div class="hero-content">
-      <h1 class="hero-title">Find Your Perfect Flight</h1>
-      <p class="hero-subtitle">Search and compare flights from hundreds of airlines</p>
-    </div>
-  </div>
-
   <div class="search-section">
+    <h1 class="page-title">Flight Search</h1>
     <div class="search-card">
-      <h2>Search Flights</h2>
       <form (ngSubmit)="onSearch()" class="search-form">
         <div *ngIf="errorMessage" class="error-message">
           {{ errorMessage }}
@@ -21,13 +14,12 @@
         </div>
         <div class="form-row">
           <div class="form-group autocomplete-container">
-            <label for="fromCity">From</label>
             <input
               type="text"
               id="fromCity"
               [(ngModel)]="searchForm.fromCity"
               name="fromCity"
-              placeholder="Departure city (e.g., HYD)"
+              placeholder="From"
               (input)="onFromCityInput()"
               (focus)="onFromFocus()"
               (blur)="onFromBlur()"
@@ -44,13 +36,12 @@
             </div>
           </div>
           <div class="form-group autocomplete-container">
-            <label for="toCity">To</label>
             <input
               type="text"
               id="toCity"
               [(ngModel)]="searchForm.toCity"
               name="toCity"
-              placeholder="Destination city (e.g., VIJ)"
+              placeholder="To"
               (input)="onToCityInput()"
               (focus)="onToFocus()"
               (blur)="onToBlur()"
@@ -67,7 +58,6 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="travelDate">Travel Date</label>
             <input
               type="date"
               id="travelDate"
@@ -78,7 +68,7 @@
             />
           </div>
           <button type="submit" class="search-btn" [disabled]="isSearching || !isFormValid()">
-            {{ isSearching ? 'Searching...' : 'Search Flights' }}
+            {{ isSearching ? 'Searching...' : 'Search' }}
           </button>
         </div>
       </form>
@@ -89,7 +79,7 @@
   </div>
 
   <div class="flights-section">
-    <h2 *ngIf="showAllFlights" class="section-title">All Available Flights</h2>
+    <h2 *ngIf="showAllFlights" class="section-title">Available Flights</h2>
     <h2 *ngIf="!showAllFlights" class="section-title">Search Results</h2>
 
     <div *ngIf="getDisplayFlights().length === 0 && !isSearching" class="no-flights">
