@@ -30,8 +30,15 @@ services:
     container_name: config-server
     ports:
       - "9888:8888"
-    environment:
-      - SPRING_PROFILES_ACTIVE=native
+    # Using git profile (default) - fetches from GitHub
+    # environment:
+    #   - SPRING_PROFILES_ACTIVE=native
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8888/actuator/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
     restart: unless-stopped
 
   # =========================
@@ -65,9 +72,11 @@ services:
     depends_on:
       service-registry:
         condition: service_healthy
+      config-server:
+        condition: service_healthy
     environment:
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka
-      - EUREKA_INSTANCE_HOSTNAME=api-gateway
+      - SPRING_PROFILES_ACTIVE=docker
+      - CONFIG_SERVER_URL=http://config-server:8888
     restart: unless-stopped
 
   # =========================
@@ -85,11 +94,7 @@ services:
       postgres:
         condition: service_healthy
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/flightapp_auth
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=0000
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka
-      - EUREKA_INSTANCE_HOSTNAME=auth-service
+      - SPRING_PROFILES_ACTIVE=docker
     restart: unless-stopped
 
   # =========================
@@ -104,18 +109,13 @@ services:
     depends_on:
       service-registry:
         condition: service_healthy
+      config-server:
+        condition: service_healthy
       postgres:
         condition: service_healthy
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/bookingdb
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=0000
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka
-      - EUREKA_INSTANCE_HOSTNAME=booking-service
-      - SPRING_RABBITMQ_HOST=host.docker.internal
-      - SPRING_RABBITMQ_PORT=5672
-      - SPRING_RABBITMQ_USERNAME=guest
-      - SPRING_RABBITMQ_PASSWORD=guest
+      - SPRING_PROFILES_ACTIVE=docker
+      - CONFIG_SERVER_URL=http://config-server:8888
     restart: unless-stopped
 
   # =========================
@@ -130,14 +130,13 @@ services:
     depends_on:
       service-registry:
         condition: service_healthy
+      config-server:
+        condition: service_healthy
       postgres:
         condition: service_healthy
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/flightdb
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=0000
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka
-      - EUREKA_INSTANCE_HOSTNAME=flight-service
+      - SPRING_PROFILES_ACTIVE=docker
+      - CONFIG_SERVER_URL=http://config-server:8888
     restart: unless-stopped
 
   # =========================
@@ -153,12 +152,7 @@ services:
       service-registry:
         condition: service_healthy
     environment:
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka
-      - EUREKA_INSTANCE_HOSTNAME=email-service
-      - SPRING_RABBITMQ_HOST=host.docker.internal
-      - SPRING_RABBITMQ_PORT=5672
-      - SPRING_RABBITMQ_USERNAME=guest
-      - SPRING_RABBITMQ_PASSWORD=guest
+      - SPRING_PROFILES_ACTIVE=docker
       - MAILTRAP_HOST=${MAILTRAP_HOST}
       - MAILTRAP_PORT=${MAILTRAP_PORT}
       - MAILTRAP_USERNAME=${MAILTRAP_USERNAME}
