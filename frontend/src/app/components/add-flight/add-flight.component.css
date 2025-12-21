@@ -1,0 +1,172 @@
+/* Add Flight Page - Natural minimalist styling */
+.add-flight-container {
+    min-height: 100vh;
+    background: var(--bg-primary, #faf9f7);
+    padding: 2rem 1rem 3rem;
+}
+
+.page-header {
+    max-width: 600px;
+    margin: 0 auto 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.back-btn {
+    padding: 0.5rem 1rem;
+    background: var(--bg-card, white);
+    color: var(--text-secondary, #6b6560);
+    border: 1px solid var(--border, #e8e4df);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.back-btn:hover {
+    background: var(--border, #e8e4df);
+}
+
+.page-title {
+    color: var(--text-primary, #2d2a26);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.form-card {
+    max-width: 600px;
+    margin: 0 auto;
+    background: var(--bg-card, white);
+    border-radius: 16px;
+    padding: 2rem;
+    border: 1px solid var(--border, #e8e4df);
+    box-shadow: 0 4px 20px rgba(45, 42, 38, 0.06);
+}
+
+.add-flight-form .form-group {
+    margin-bottom: 1.25rem;
+}
+
+.add-flight-form label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-secondary, #6b6560);
+    margin-bottom: 0.5rem;
+}
+
+.add-flight-form input {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--border, #e8e4df);
+    border-radius: 10px;
+    font-size: 1rem;
+    background: var(--bg-card, white);
+    color: var(--text-primary, #2d2a26);
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.add-flight-form input:focus {
+    outline: none;
+    border-color: var(--accent, #c96442);
+    box-shadow: 0 0 0 3px rgba(201, 100, 66, 0.1);
+}
+
+.add-flight-form input::placeholder {
+    color: var(--text-muted, #9c9590);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border, #e8e4df);
+}
+
+.cancel-btn {
+    padding: 0.85rem 1.75rem;
+    background: var(--bg-primary, #faf9f7);
+    color: var(--text-secondary, #6b6560);
+    border: 1px solid var(--border, #e8e4df);
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.cancel-btn:hover {
+    background: var(--border, #e8e4df);
+}
+
+.submit-btn {
+    padding: 0.85rem 2rem;
+    background: var(--accent, #c96442);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+}
+
+.submit-btn:hover:not(:disabled) {
+    background: var(--accent-hover, #a85236);
+    transform: translateY(-1px);
+}
+
+.submit-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.error-message {
+    background: #fdf6f6;
+    color: var(--error, #b54a4a);
+    padding: 0.85rem 1rem;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    border-left: 4px solid var(--error, #b54a4a);
+    margin-bottom: 1.25rem;
+}
+
+.success-message {
+    background: #f0fdf4;
+    color: var(--success, #4a7c59);
+    padding: 0.85rem 1rem;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    border-left: 4px solid var(--success, #4a7c59);
+    margin-bottom: 1.25rem;
+}
+
+@media (max-width: 600px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .cancel-btn,
+    .submit-btn {
+        width: 100%;
+    }
+}

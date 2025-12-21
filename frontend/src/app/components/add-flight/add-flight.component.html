@@ -1,0 +1,65 @@
+<div class="add-flight-container">
+    <div class="page-header">
+        <button class="back-btn" (click)="goBack()">← Back</button>
+        <h1 class="page-title">Add New Flight</h1>
+    </div>
+
+    <div class="form-card">
+        <form (ngSubmit)="onSubmit()" class="add-flight-form">
+            <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+            <div *ngIf="successMessage" class="success-message">{{ successMessage }}</div>
+
+            <div class="form-group">
+                <label for="flightNumber">Flight Number</label>
+                <input type="text" id="flightNumber" [(ngModel)]="addFlightForm.flightNumber" name="flightNumber"
+                    placeholder="e.g. AI101" required />
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="fromCity">From City</label>
+                    <input type="text" id="fromCity" [(ngModel)]="addFlightForm.fromCity" name="fromCity"
+                        placeholder="e.g. DELHI" required />
+                </div>
+                <div class="form-group">
+                    <label for="toCity">To City</label>
+                    <input type="text" id="toCity" [(ngModel)]="addFlightForm.toCity" name="toCity"
+                        placeholder="e.g. MUMBAI" required />
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="departureTime">Departure Time</label>
+                    <input type="datetime-local" id="departureTime" [(ngModel)]="addFlightForm.departureTime"
+                        name="departureTime" [min]="minDateTime" required />
+                </div>
+                <div class="form-group">
+                    <label for="arrivalTime">Arrival Time</label>
+                    <input type="datetime-local" id="arrivalTime" [(ngModel)]="addFlightForm.arrivalTime"
+                        name="arrivalTime" required />
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="cost">Cost (₹)</label>
+                    <input type="number" id="cost" [(ngModel)]="addFlightForm.cost" name="cost" placeholder="e.g. 5000"
+                        min="1" required />
+                </div>
+                <div class="form-group">
+                    <label for="seatsAvailable">Seats Available</label>
+                    <input type="number" id="seatsAvailable" [(ngModel)]="addFlightForm.seatsAvailable"
+                        name="seatsAvailable" placeholder="e.g. 150" min="1" required />
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="cancel-btn" (click)="goBack()">Cancel</button>
+                <button type="submit" class="submit-btn" [disabled]="isSubmitting || !isFormValid()">
+                    {{ isSubmitting ? 'Adding Flight...' : 'Add Flight' }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
