@@ -15,3 +15,16 @@ export interface SearchFlightRequest {
   travelDate: string; // ISO date string
 }
 
+export interface AddFlightRequest {
+  flightNumber: string;
+  fromCity: string;
+  toCity: string;
+  departureTime: string; // ISO datetime string
+  arrivalTime: string;   // ISO datetime string
+  cost: number;
+  seatsAvailable: number;
+}
+
+export interface AddFlightResponse {
+  id: number;
+}
