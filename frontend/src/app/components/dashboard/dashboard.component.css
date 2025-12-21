@@ -150,11 +150,12 @@
   border-radius: 12px;
   padding: 1.25rem;
   border: 1px solid var(--border, #e8e4df);
-  transition: box-shadow 0.15s;
+  transition: all 0.2s ease;
 }
 
 .flight-card:hover {
-  box-shadow: 0 4px 12px var(--shadow, rgba(45, 42, 38, 0.08));
+  box-shadow: 0 8px 24px var(--shadow, rgba(45, 42, 38, 0.12));
+  transform: translateY(-4px);
 }
 
 .flight-header {
