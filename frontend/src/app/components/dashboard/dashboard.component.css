@@ -305,3 +305,207 @@
   border-left: 3px solid #f59e0b;
   margin-bottom: 1rem;
 }
+
+/* Section Header with Admin Button */
+.section-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  position: relative;
+}
+
+.section-header .section-title {
+  margin-bottom: 0;
+}
+
+.add-flight-btn {
+  position: absolute;
+  right: 0;
+  padding: 0.6rem 1.25rem;
+  background: var(--success, #4a7c59);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+}
+
+.add-flight-btn:hover {
+  background: #3d6a4a;
+  transform: translateY(-1px);
+}
+
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(45, 42, 38, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  backdrop-filter: blur(4px);
+}
+
+.modal-content {
+  background: var(--bg-card, white);
+  border-radius: 16px;
+  width: 90%;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(45, 42, 38, 0.2);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border, #e8e4df);
+}
+
+.modal-header h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary, #2d2a26);
+  margin: 0;
+}
+
+.modal-close {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: var(--bg-primary, #faf9f7);
+  color: var(--text-secondary, #6b6560);
+  border-radius: 8px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.modal-close:hover {
+  background: var(--border, #e8e4df);
+}
+
+/* Add Flight Form */
+.add-flight-form {
+  padding: 1.5rem;
+}
+
+.add-flight-form .form-group {
+  margin-bottom: 1rem;
+}
+
+.add-flight-form label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-secondary, #6b6560);
+  margin-bottom: 0.4rem;
+}
+
+.add-flight-form input {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  border: 1px solid var(--border, #e8e4df);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  background: var(--bg-card, white);
+  color: var(--text-primary, #2d2a26);
+  transition: border-color 0.15s;
+}
+
+.add-flight-form input:focus {
+  outline: none;
+  border-color: var(--accent, #c96442);
+}
+
+.form-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+/* Modal Actions */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border, #e8e4df);
+}
+
+.cancel-btn {
+  padding: 0.7rem 1.5rem;
+  background: var(--bg-primary, #faf9f7);
+  color: var(--text-secondary, #6b6560);
+  border: 1px solid var(--border, #e8e4df);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.cancel-btn:hover {
+  background: var(--border, #e8e4df);
+}
+
+.submit-btn {
+  padding: 0.7rem 1.5rem;
+  background: var(--accent, #c96442);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background: var(--accent-hover, #a85236);
+}
+
+.submit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Success Message */
+.success-message {
+  background: #f0fdf4;
+  color: var(--success, #4a7c59);
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  border-left: 3px solid var(--success, #4a7c59);
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 520px) {
+  .form-row-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .add-flight-btn {
+    position: static;
+    margin-top: 0.5rem;
+  }
+
+  .section-header {
+    flex-direction: column;
+  }
+}
