@@ -23,12 +23,15 @@ export class HeaderComponent implements OnInit {
   // Logout confirmation dialog
   showLogoutConfirm: boolean = false;
 
+  // User dropdown menu toggle
+  showUserDropdown: boolean = false;
+
   // AuthService handles authentication logic
   // Router is used for navigation and listening to route changes
   constructor(
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     // Initial auth check when header loads
@@ -62,5 +65,18 @@ export class HeaderComponent implements OnInit {
 
   cancelLogout(): void {
     this.showLogoutConfirm = false;
+  }
+
+  toggleUserDropdown(): void {
+    this.showUserDropdown = !this.showUserDropdown;
+  }
+
+  closeUserDropdown(): void {
+    this.showUserDropdown = false;
+  }
+
+  // Get user initials for avatar
+  getUserInitial(): string {
+    return this.username ? this.username.charAt(0).toUpperCase() : 'U';
   }
 }

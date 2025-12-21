@@ -11,10 +11,27 @@
         <a routerLink="/signup" class="btn btn-primary">Sign Up</a>
       </div>
 
-      <div *ngIf="isAuthenticated" class="user-menu">
-        <span class="username">Welcome, {{ username }}</span>
+      <div *ngIf="isAuthenticated" class="user-section">
         <a routerLink="/booking-history" class="btn btn-outline">Booking History</a>
-        <button (click)="logout()" class="btn btn-outline">Logout</button>
+        <span class="welcome-text">Welcome, {{ username }}</span>
+
+        <div class="menu-container">
+          <button class="menu-btn" (click)="toggleUserDropdown()">
+            <span class="menu-line"></span>
+            <span class="menu-line"></span>
+            <span class="menu-line"></span>
+          </button>
+
+          <div *ngIf="showUserDropdown" class="user-dropdown">
+            <button class="dropdown-item" (click)="closeUserDropdown()">
+              Change Password
+            </button>
+            <div class="dropdown-divider"></div>
+            <button class="dropdown-item logout-item" (click)="logout()">
+              Logout
+            </button>
+          </div>
+        </div>
       </div>
     </nav>
   </div>
@@ -30,4 +47,3 @@
     </div>
   </div>
 </div>
-

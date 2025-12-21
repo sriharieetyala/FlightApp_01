@@ -38,12 +38,37 @@ public class AuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<Map<String, String>> logout() {
-        // I prepared a simple response map as logout does not need a service call in stateless JWT auth
+        // I prepared a simple response map as logout does not need a service call in
+        // stateless JWT auth
         Map<String, String> body = new HashMap<>();
         // I added the status and message to confirm logout action
         body.put("status", "OK");
         body.put("message", "Logged out successfully.");
         // I am returning OK status with the logout message
+        return ResponseEntity.ok(body);
+    }
+
+    /**
+     * PUT /auth/change-password - Changes user's password
+     * 
+     * WHY PUT: We're updating (modifying) an existing resource (user's password)
+     * WHY @RequestHeader: Username comes from API Gateway which extracts it from
+     * JWT token
+     * WHY @Valid: Triggers validation annotations in ChangePasswordRequest
+     * (@NotBlank, @Size)
+     */
+    @PutMapping("/change-password")
+    public ResponseEntity<Map<String, String>> changePassword(
+            @RequestHeader("X-User-Name") String username,
+            @Valid @RequestBody ChangePasswordRequest request) {
+
+        // Call service method to change password
+        userService.changePassword(username, request);
+
+        // Return success response
+        Map<String, String> body = new HashMap<>();
+        body.put("status", "OK");
+        body.put("message", "Password changed successfully");
         return ResponseEntity.ok(body);
     }
 }
