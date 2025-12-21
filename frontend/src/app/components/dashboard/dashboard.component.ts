@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FlightService } from '../../services/flight.service';
+import { AuthService } from '../../services/auth.service';
 import { Flight, SearchFlightRequest } from '../../models/flight.models';
 
 
@@ -58,12 +59,17 @@ export class DashboardComponent implements OnInit {
     travelDate: ''
   };
 
+  // Admin flag
+  isAdmin = false;
+
   constructor(
     private readonly flightService: FlightService,
+    private readonly authService: AuthService,
     private readonly router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
+    this.isAdmin = this.authService.isAdmin();
     this.setMinDate();
     this.loadAllFlights();
   }
@@ -281,5 +287,10 @@ export class DashboardComponent implements OnInit {
   // Navigate to booking page
   openBooking(flight: Flight): void {
     this.router.navigate(['/booking', flight.id]);
+  }
+
+  // Navigate to Add Flight page (Admin only)
+  goToAddFlight(): void {
+    this.router.navigate(['/add-flight']);
   }
 }
