@@ -10,7 +10,7 @@ export class AuthService {
   // Direct URL to API Gateway (CORS enabled)
   private apiUrl = 'http://localhost:8080/auth';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   login(request: LoginRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/login`, request);
@@ -52,6 +52,10 @@ export class AuthService {
     localStorage.setItem('username', response.username);
     localStorage.setItem('email', response.email);
     localStorage.setItem('role', response.role);
+  }
+
+  isAdmin(): boolean {
+    return this.getRole() === 'ADMIN';
   }
 }
 

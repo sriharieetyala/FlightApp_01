@@ -14,58 +14,26 @@
         </div>
         <div class="form-row">
           <div class="form-group autocomplete-container">
-            <input
-              type="text"
-              id="fromCity"
-              [(ngModel)]="searchForm.fromCity"
-              name="fromCity"
-              placeholder="From"
-              (input)="onFromCityInput()"
-              (focus)="onFromFocus()"
-              (blur)="onFromBlur()"
-              autocomplete="off"
-              required
-            />
+            <input type="text" id="fromCity" [(ngModel)]="searchForm.fromCity" name="fromCity" placeholder="From"
+              (input)="onFromCityInput()" (focus)="onFromFocus()" (blur)="onFromBlur()" autocomplete="off" required />
             <div *ngIf="showFromDropdown && filteredFromCities.length > 0" class="autocomplete-dropdown">
-              <div
-                *ngFor="let city of filteredFromCities"
-                class="autocomplete-item"
-                (mousedown)="selectFromCity(city)">
+              <div *ngFor="let city of filteredFromCities" class="autocomplete-item" (mousedown)="selectFromCity(city)">
                 {{ city }}
               </div>
             </div>
           </div>
           <div class="form-group autocomplete-container">
-            <input
-              type="text"
-              id="toCity"
-              [(ngModel)]="searchForm.toCity"
-              name="toCity"
-              placeholder="To"
-              (input)="onToCityInput()"
-              (focus)="onToFocus()"
-              (blur)="onToBlur()"
-              autocomplete="off"
-              required
-            />
+            <input type="text" id="toCity" [(ngModel)]="searchForm.toCity" name="toCity" placeholder="To"
+              (input)="onToCityInput()" (focus)="onToFocus()" (blur)="onToBlur()" autocomplete="off" required />
             <div *ngIf="showToDropdown && filteredToCities.length > 0" class="autocomplete-dropdown">
-              <div
-                *ngFor="let city of filteredToCities"
-                class="autocomplete-item"
-                (mousedown)="selectToCity(city)">
+              <div *ngFor="let city of filteredToCities" class="autocomplete-item" (mousedown)="selectToCity(city)">
                 {{ city }}
               </div>
             </div>
           </div>
           <div class="form-group">
-            <input
-              type="date"
-              id="travelDate"
-              [(ngModel)]="searchForm.travelDate"
-              name="travelDate"
-              [min]="minDate"
-              required
-            />
+            <input type="date" id="travelDate" [(ngModel)]="searchForm.travelDate" name="travelDate" [min]="minDate"
+              required />
           </div>
           <button type="submit" class="search-btn" [disabled]="isSearching || !isFormValid()">
             {{ isSearching ? 'Searching...' : 'Search' }}
@@ -79,8 +47,13 @@
   </div>
 
   <div class="flights-section">
-    <h2 *ngIf="showAllFlights" class="section-title">Available Flights</h2>
-    <h2 *ngIf="!showAllFlights" class="section-title">Search Results</h2>
+    <div class="section-header">
+      <h2 *ngIf="showAllFlights" class="section-title">Available Flights</h2>
+      <h2 *ngIf="!showAllFlights" class="section-title">Search Results</h2>
+      <button *ngIf="isAdmin" class="add-flight-btn" (click)="goToAddFlight()">
+        + Add Flight
+      </button>
+    </div>
 
     <div *ngIf="getDisplayFlights().length === 0 && !isSearching" class="no-flights">
       <p *ngIf="showAllFlights">No flights available at the moment.</p>
@@ -115,4 +88,3 @@
     </div>
   </div>
 </div>
-
