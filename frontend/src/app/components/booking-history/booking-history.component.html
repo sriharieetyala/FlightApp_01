@@ -21,18 +21,19 @@
 
     <!-- Booking Cards -->
     <div *ngIf="!isLoading && bookings.length > 0" class="bookings-list">
-      <div class="booking-card" *ngFor="let booking of bookings" [ngClass]="{'cancelled-card': booking.status === 'CANCELLED'}">
+      <div class="booking-card" *ngFor="let booking of bookings" [ngClass]="{
+        'cancelled-card': booking.status === 'CANCELLED',
+        'completed-card': booking.status !== 'CANCELLED' && isFlightDeparted(booking)
+      }">
         <div class="booking-header">
           <div class="header-left">
             <span class="pnr">PNR: {{ booking.pnr }}</span>
-            <span class="status" [ngClass]="booking.status === 'BOOKED' ? 'status-booked' : 'status-cancelled'">
-              {{ booking.status }}
+            <span class="status" [ngClass]="getFlightStatusClass(booking)">
+              {{ getFlightStatusLabel(booking) }}
             </span>
           </div>
-          <button
-            *ngIf="booking.status === 'BOOKED'"
-            class="cancel-btn-small"
-            (click)="cancelBooking(booking)">
+          <!-- Show Cancel button only for upcoming bookings -->
+          <button *ngIf="canCancelBooking(booking)" class="cancel-btn-small" (click)="cancelBooking(booking)">
             Cancel
           </button>
         </div>
