@@ -82,16 +82,16 @@ h1 {
   border: 1px solid var(--border, #e8e4df);
   border-radius: 12px;
   padding: 18px;
-  transition: box-shadow 0.15s ease;
+  transition: all 0.2s ease;
 }
 
 .booking-card:hover {
-  box-shadow: 0 4px 12px var(--shadow, rgba(45, 42, 38, 0.08));
+  box-shadow: 0 8px 24px var(--shadow, rgba(45, 42, 38, 0.12));
+  transform: translateY(-4px);
 }
 
 .booking-card.cancelled-card {
   opacity: 0.75;
-  border-left: 3px solid var(--error, #b54a4a);
 }
 
 .booking-header {
@@ -132,6 +132,18 @@ h1 {
 .status-cancelled {
   background: #fdf6f6;
   color: var(--error, #b54a4a);
+}
+
+/* Booked flight - green (active, can cancel) */
+.status-booked {
+  background: #eef6f0;
+  color: var(--success, #4a7c59);
+}
+
+/* Travelled flight - neutral blue/gray */
+.status-travelled {
+  background: #f0f4f8;
+  color: #5a7089;
 }
 
 .cancel-btn-small {

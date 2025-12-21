@@ -154,4 +154,40 @@ export class BookingHistoryComponent implements OnInit {
     this.bookingToCancel = null;
     this.isCancelling = false;
   }
+
+  // Check if flight has departed (departure time is in the past)
+  isFlightDeparted(booking: BookingHistory): boolean {
+    if (!booking.flight?.departureTime) {
+      return false;
+    }
+    const departureTime = new Date(booking.flight.departureTime);
+    return departureTime < new Date();
+  }
+
+  // Check if cancellation is allowed (flight not departed and status is BOOKED)
+  canCancelBooking(booking: BookingHistory): boolean {
+    return booking.status === 'BOOKED' && !this.isFlightDeparted(booking);
+  }
+
+  // Get professional status label like apps
+  getFlightStatusLabel(booking: BookingHistory): string {
+    if (booking.status === 'CANCELLED') {
+      return 'Cancelled';
+    }
+    if (this.isFlightDeparted(booking)) {
+      return 'Travelled';
+    }
+    return 'Booked';
+  }
+
+  // Get status class for styling
+  getFlightStatusClass(booking: BookingHistory): string {
+    if (booking.status === 'CANCELLED') {
+      return 'status-cancelled';
+    }
+    if (this.isFlightDeparted(booking)) {
+      return 'status-travelled';
+    }
+    return 'status-booked';
+  }
 }

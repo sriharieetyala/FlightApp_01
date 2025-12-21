@@ -1,17 +1,15 @@
-# ===== BUILD STAGE =====
-FROM eclipse-temurin:21-jdk AS build
-
-WORKDIR /workspace
-COPY . .
-RUN chmod +x mvnw
-RUN ./mvnw clean package spring-boot:repackage -Dmaven.test.skip=true
-
-
-
-# ===== RUNTIME STAGE =====
+<<<<<<< Updated upstream
+# Optimized Dockerfile - uses pre-built JAR
+=======
+>>>>>>> Stashed changes
 FROM eclipse-temurin:21-jre
-WORKDIR /app
-COPY --from=build /workspace/target/*.jar app.jar
 
+WORKDIR /app
+<<<<<<< Updated upstream
+COPY target/auth-service-*.jar app.jar
+=======
+COPY target/*.jar app.jar
+
+>>>>>>> Stashed changes
 EXPOSE 9000
 ENTRYPOINT ["java", "-jar", "app.jar"]

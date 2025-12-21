@@ -1,20 +1,15 @@
-# ===== BUILD STAGE =====
-FROM eclipse-temurin:21-jdk AS build
+<<<<<<< Updated upstream
+# Optimized Dockerfile - uses pre-built JAR
+=======
 
-WORKDIR /workspace
-COPY . .
-RUN chmod +x mvnw
-RUN ./mvnw clean package spring-boot:repackage -Dmaven.test.skip=true
-
-
-
-# ===== RUNTIME STAGE =====
+>>>>>>> Stashed changes
 FROM eclipse-temurin:21-jre
-
 WORKDIR /app
-COPY --from=build /workspace/target/*.jar app.jar
+<<<<<<< Updated upstream
+COPY target/flight-service-*.jar app.jar
+=======
+COPY target/*.jar app.jar
 
-# FLIGHT-SERVICE runs on 8081
+>>>>>>> Stashed changes
 EXPOSE 8081
-
 ENTRYPOINT ["java", "-jar", "app.jar"]
