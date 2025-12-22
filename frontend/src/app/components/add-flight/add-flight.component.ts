@@ -87,8 +87,8 @@ export class AddFlightComponent implements OnInit {
             flightNumber: this.addFlightForm.flightNumber.trim().toUpperCase(),
             fromCity: this.addFlightForm.fromCity.trim().toUpperCase(),
             toCity: this.addFlightForm.toCity.trim().toUpperCase(),
-            departureTime: this.addFlightForm.departureTime,
-            arrivalTime: this.addFlightForm.arrivalTime,
+            departureTime: this.addFlightForm.departureTime + ':00',
+            arrivalTime: this.addFlightForm.arrivalTime + ':00',
             cost: this.addFlightForm.cost,
             seatsAvailable: this.addFlightForm.seatsAvailable
         };
