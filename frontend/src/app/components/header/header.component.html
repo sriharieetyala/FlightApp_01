@@ -23,9 +23,9 @@
           </button>
 
           <div *ngIf="showUserDropdown" class="user-dropdown">
-            <button class="dropdown-item" (click)="closeUserDropdown()">
+            <a routerLink="/change-password" class="dropdown-item" (click)="closeUserDropdown()">
               Change Password
-            </button>
+            </a>
             <div class="dropdown-divider"></div>
             <button class="dropdown-item logout-item" (click)="logout()">
               Logout
