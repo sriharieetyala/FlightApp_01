@@ -24,5 +24,9 @@ export const routes: Routes = [
   {
     path: 'add-flight',
     loadComponent: () => import('./components/add-flight/add-flight.component').then(m => m.AddFlightComponent)
+  },
+  {
+    path: 'change-password',
+    loadComponent: () => import('./components/change-password/change-password.component').then(m => m.ChangePasswordComponent)
   }
 ];
