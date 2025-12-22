@@ -1,0 +1,12 @@
+# Maven build output
+**/target/
+
+# npm dependencies
+node_modules/
+
+# IDE settings
+.idea/
+.vscode/
+
+# Environment secrets
+.env

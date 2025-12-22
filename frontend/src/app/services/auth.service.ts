@@ -57,5 +57,15 @@ export class AuthService {
   isAdmin(): boolean {
     return this.getRole() === 'ADMIN';
   }
+
+  // Change password API call
+  changePassword(currentPassword: string, newPassword: string): Observable<any> {
+    const username = this.getUsername();
+    return this.http.put(
+      `${this.apiUrl}/change-password`,
+      { currentPassword, newPassword },
+      { headers: { 'X-User-Name': username || '' } }
+    );
+  }
 }
 
