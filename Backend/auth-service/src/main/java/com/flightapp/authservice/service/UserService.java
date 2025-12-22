@@ -106,15 +106,20 @@ public class UserService {
                         "User not found"));
 
         // Step 2: Verify the current password matches what's stored in DB
-        // WHY: Security check - only someone who knows the old password can change it
         if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "Current password is incorrect");
         }
 
-        // Step 3: Encode the new password and save
-        // WHY encode: Never store plain text passwords - always hash them
+        // Step 3: Ensure new password is different from current password
+        if (passwordEncoder.matches(request.getNewPassword(), user.getPassword())) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "New password must be different from current password");
+        }
+
+        // Step 4: Encode the new password and save
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
     }
