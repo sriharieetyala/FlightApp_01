@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -11,7 +11,7 @@ import { AuthService } from '../../services/auth.service';
     templateUrl: './change-password.component.html',
     styleUrl: './change-password.component.css'
 })
-export class ChangePasswordComponent {
+export class ChangePasswordComponent implements OnInit {
 
     // Form fields
     currentPassword = '';
@@ -23,13 +23,26 @@ export class ChangePasswordComponent {
     errorMessage = '';
     successMessage = '';
 
+    // Flag to show password expired warning
+    isPasswordExpired = false;
+
     constructor(
         private authService: AuthService,
         private router: Router
-    ) {
+    ) { }
+
+    ngOnInit(): void {
         // Redirect to login if not authenticated
         if (!this.authService.isAuthenticated()) {
             this.router.navigate(['/login']);
+            return;
+        }
+
+        // Check if user was redirected due to password expiry
+        const expiredFlag = localStorage.getItem('passwordExpired');
+        if (expiredFlag === 'true') {
+            this.isPasswordExpired = true;
+            // Don't remove flag yet - remove after successful password change
         }
     }
 
@@ -71,6 +84,11 @@ export class ChangePasswordComponent {
         this.authService.changePassword(this.currentPassword, this.newPassword).subscribe({
             next: () => {
                 this.isSubmitting = false;
+
+                // Clear password expired flag after successful change
+                localStorage.removeItem('passwordExpired');
+                this.isPasswordExpired = false;
+
                 this.successMessage = 'Password changed successfully! Redirecting...';
                 setTimeout(() => this.router.navigate(['/']), 1500);
             },

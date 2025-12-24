@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { SignupRequest } from '../../models/auth.models';
@@ -8,23 +8,14 @@ import { SignupRequest } from '../../models/auth.models';
 @Component({
   selector: 'app-signup',
   standalone: true,
-  // FormsModule handles form binding, RouterModule enables navigation after signup
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.css'
 })
 export class SignupComponent {
 
-  // Holds user input for signup request
-  signupForm: SignupRequest = {
-    username: '',
-    email: '',
-    password: '',
-    adminSecret: ''
-  };
-
-  // Used to confirm password match on UI level
-  confirmPassword: string = '';
+  // Reactive form group for signup
+  signupForm: FormGroup;
 
   // Displays validation or backend errors
   errorMessage: string = '';
@@ -38,32 +29,96 @@ export class SignupComponent {
   // AuthService handles signup logic, Router is used for redirection
   constructor(
     private authService: AuthService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private fb: FormBuilder
+  ) {
+    // Initialize form with validators
+    this.signupForm = this.fb.group({
+      username: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [
+        Validators.required,
+        Validators.minLength(6),
+        this.uppercaseValidator,
+        this.lowercaseValidator,
+        this.specialCharValidator
+      ]],
+      confirmPassword: ['', Validators.required],
+      adminSecret: ['']
+    });
+  }
+
+  // Custom validator for uppercase letter
+  uppercaseValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value;
+    if (!value) return null;
+    return /[A-Z]/.test(value) ? null : { noUppercase: true };
+  }
+
+  // Custom validator for lowercase letter
+  lowercaseValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value;
+    if (!value) return null;
+    return /[a-z]/.test(value) ? null : { noLowercase: true };
+  }
+
+  // Custom validator for special character
+  specialCharValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value;
+    if (!value) return null;
+    return /[!@#$%^&*(),.?":{}|<>_\-+=\[\]\\/~`]/.test(value) ? null : { noSpecialChar: true };
+  }
+
+  // Password validation helpers for real-time feedback (used in template)
+  get hasMinLength(): boolean {
+    const password = this.signupForm.get('password')?.value || '';
+    return password.length >= 6;
+  }
+
+  get hasUppercase(): boolean {
+    const password = this.signupForm.get('password')?.value || '';
+    return /[A-Z]/.test(password);
+  }
+
+  get hasLowercase(): boolean {
+    const password = this.signupForm.get('password')?.value || '';
+    return /[a-z]/.test(password);
+  }
+
+  get hasSpecialChar(): boolean {
+    const password = this.signupForm.get('password')?.value || '';
+    return /[!@#$%^&*(),.?":{}|<>_\-+=\[\]\\/~`]/.test(password);
+  }
+
+  get isPasswordValid(): boolean {
+    return this.hasMinLength && this.hasUppercase && this.hasLowercase && this.hasSpecialChar;
+  }
 
   onSubmit(): void {
+    const formValue = this.signupForm.value;
+
     // Basic validation to avoid empty requests
-    if (!this.signupForm.username || !this.signupForm.email || !this.signupForm.password) {
+    if (!formValue.username || !formValue.email || !formValue.password) {
       this.errorMessage = 'Please fill in all required fields';
       return;
     }
 
     // Validates email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(this.signupForm.email)) {
+    if (!emailRegex.test(formValue.email)) {
       this.errorMessage = 'Please enter a valid email address';
       return;
     }
 
     // Ensures password and confirm password match
-    if (this.signupForm.password !== this.confirmPassword) {
+    if (formValue.password !== formValue.confirmPassword) {
       this.errorMessage = 'Passwords do not match';
       return;
     }
 
-    // Enforces minimum password length on client side
-    if (this.signupForm.password.length < 6) {
-      this.errorMessage = 'Password must be at least 6 characters';
+    // Validates password strength
+    if (!this.isPasswordValid) {
+      this.errorMessage = 'Password does not meet all requirements';
       return;
     }
 
@@ -73,13 +128,13 @@ export class SignupComponent {
 
     // Constructs request object and excludes adminSecret if not provided
     const request: SignupRequest = {
-      username: this.signupForm.username,
-      email: this.signupForm.email,
-      password: this.signupForm.password
+      username: formValue.username,
+      email: formValue.email,
+      password: formValue.password
     };
 
-    if (this.signupForm.adminSecret) {
-      request.adminSecret = this.signupForm.adminSecret;
+    if (formValue.adminSecret) {
+      request.adminSecret = formValue.adminSecret;
     }
 
     // Logs only username for debugging

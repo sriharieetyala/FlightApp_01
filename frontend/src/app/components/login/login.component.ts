@@ -31,7 +31,7 @@ export class LoginComponent {
   constructor(
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) { }
 
   onSubmit(): void {
     // Prevents empty login requests
@@ -53,8 +53,16 @@ export class LoginComponent {
         this.authService.saveAuthData(response);
         this.isLoading = false;
 
-        // Redirects user after successful login
-        this.router.navigate(['/']);
+        // Check if password has expired (older than 30 days)
+        if (response.passwordExpired) {
+          // Store flag to show message on change-password page
+          localStorage.setItem('passwordExpired', 'true');
+          // Redirect to change password page
+          this.router.navigate(['/change-password']);
+        } else {
+          // Normal login - redirect to dashboard
+          this.router.navigate(['/']);
+        }
       },
       error: (error) => {
         this.isLoading = false;
@@ -62,11 +70,11 @@ export class LoginComponent {
         // Status 0 usually indicates backend or network issue
         if (error.status === 0) {
           this.errorMessage = 'Cannot connect to server. Please ensure the backend is running on port 8080.';
-        } 
+        }
         // Handles invalid credentials or bad request
         else if (error.status === 400 || error.status === 401) {
           this.errorMessage = error.error?.message || error.error || 'Invalid username or password';
-        } 
+        }
         // Fallback for unexpected errors
         else {
           this.errorMessage = error.error?.message || error.message || 'An error occurred. Please try again.';

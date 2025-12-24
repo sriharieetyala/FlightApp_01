@@ -5,64 +5,42 @@
       <p>Sign up to get started</p>
     </div>
 
-    <form (ngSubmit)="onSubmit()" class="auth-form">
+    <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" class="auth-form">
       <div class="form-group">
         <label for="username">Username</label>
-        <input
-          type="text"
-          id="username"
-          [(ngModel)]="signupForm.username"
-          name="username"
-          placeholder="Choose a username"
-          required
-        />
+        <input type="text" id="username" formControlName="username" placeholder="Choose a username" />
       </div>
 
       <div class="form-group">
         <label for="email">Email</label>
-        <input
-          type="email"
-          id="email"
-          [(ngModel)]="signupForm.email"
-          name="email"
-          placeholder="Enter your email"
-          required
-        />
+        <input type="email" id="email" formControlName="email" placeholder="Enter your email" />
       </div>
 
       <div class="form-group">
         <label for="password">Password</label>
-        <input
-          type="password"
-          id="password"
-          [(ngModel)]="signupForm.password"
-          name="password"
-          placeholder="Create a password (min 6 characters)"
-          required
-        />
+        <input type="password" id="password" formControlName="password" placeholder="Create a strong password" />
+        <!-- Password requirements indicator -->
+        <div class="password-requirements">
+          <p class="requirements-title">Password must contain:</p>
+          <ul class="requirements-list">
+            <li>At least 6 characters</li>
+            <li>1 uppercase letter (A-Z)</li>
+            <li>1 lowercase letter (a-z)</li>
+            <li>1 special character (!@#$%^&* etc.)</li>
+          </ul>
+        </div>
       </div>
 
       <div class="form-group">
         <label for="confirmPassword">Confirm Password</label>
-        <input
-          type="password"
-          id="confirmPassword"
-          [(ngModel)]="confirmPassword"
-          name="confirmPassword"
-          placeholder="Confirm your password"
-          required
-        />
+        <input type="password" id="confirmPassword" formControlName="confirmPassword"
+          placeholder="Confirm your password" />
       </div>
 
       <div class="form-group">
         <label for="adminSecret">Admin Secret (Optional)</label>
-        <input
-          type="password"
-          id="adminSecret"
-          [(ngModel)]="signupForm.adminSecret"
-          name="adminSecret"
-          placeholder="Admin secret key (optional)"
-        />
+        <input type="password" id="adminSecret" formControlName="adminSecret"
+          placeholder="Admin secret key (optional)" />
       </div>
 
       <div *ngIf="errorMessage" class="error-message">
@@ -83,4 +61,3 @@
     </div>
   </div>
 </div>
-

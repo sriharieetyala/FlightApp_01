@@ -15,6 +15,7 @@ export interface LoginResponse {
   username: string;
   email: string;
   role: string;
+  passwordExpired?: boolean;  // true if password is older than 30 days
 }
 
 export interface SignupResponse {
