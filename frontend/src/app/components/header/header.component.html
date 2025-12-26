@@ -1,49 +1,60 @@
-<header class="header">
-  <div class="header-content">
-    <div class="logo" routerLink="/">
-      <span class="logo-icon">✈</span>
-      <span class="logo-text">FlightApp</span>
-    </div>
+<nav class="navbar navbar-expand-lg bg-white border-bottom sticky-top">
+  <div class="container-fluid px-4">
+    <!-- Logo -->
+    <a class="navbar-brand d-flex align-items-center gap-2" routerLink="/">
+      <span class="fs-4">✈</span>
+      <span class="fw-bold text-accent">FlightApp</span>
+    </a>
 
-    <nav class="nav">
-      <div *ngIf="!isAuthenticated" class="auth-buttons">
-        <a routerLink="/login" class="btn btn-outline">Login</a>
-        <a routerLink="/signup" class="btn btn-primary">Sign Up</a>
+    <!-- Right side -->
+    <div class="d-flex align-items-center gap-3">
+      <!-- Auth buttons (not logged in) -->
+      <div *ngIf="!isAuthenticated" class="d-flex gap-2">
+        <a routerLink="/login" class="btn btn-outline-accent">Login</a>
+        <a routerLink="/signup" class="btn btn-accent">Sign Up</a>
       </div>
 
-      <div *ngIf="isAuthenticated" class="user-section">
-        <a routerLink="/booking-history" class="btn btn-outline">Booking History</a>
-        <span class="welcome-text">Welcome, {{ username }}</span>
+      <!-- User section (logged in) -->
+      <div *ngIf="isAuthenticated" class="d-flex align-items-center gap-3">
+        <a routerLink="/booking-history" class="btn btn-outline-accent">Booking History</a>
+        <span class="text-muted d-none d-md-inline">Welcome, {{ username }}</span>
 
-        <div class="menu-container">
-          <button class="menu-btn" (click)="toggleUserDropdown()">
-            <span class="menu-line"></span>
-            <span class="menu-line"></span>
-            <span class="menu-line"></span>
+        <!-- Dropdown menu -->
+        <div class="dropdown">
+          <button class="btn btn-outline-secondary dropdown-toggle p-2" type="button" (click)="toggleUserDropdown()">
+            <span class="navbar-toggler-icon"></span>
           </button>
 
-          <div *ngIf="showUserDropdown" class="user-dropdown">
-            <a routerLink="/change-password" class="dropdown-item" (click)="closeUserDropdown()">
-              Change Password
-            </a>
-            <div class="dropdown-divider"></div>
-            <button class="dropdown-item logout-item" (click)="logout()">
-              Logout
-            </button>
-          </div>
+          <ul *ngIf="showUserDropdown" class="dropdown-menu dropdown-menu-end show">
+            <li>
+              <a routerLink="/change-password" class="dropdown-item" (click)="closeUserDropdown()">
+                Change Password
+              </a>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li>
+              <button class="dropdown-item text-danger" (click)="logout()">Logout</button>
+            </li>
+          </ul>
         </div>
       </div>
-    </nav>
+    </div>
   </div>
-</header>
+</nav>
 
-<!-- Logout Confirmation Dialog -->
-<div *ngIf="showLogoutConfirm" class="logout-overlay">
-  <div class="logout-dialog">
-    <p>Are you sure you want to logout?</p>
-    <div class="logout-actions">
-      <button (click)="cancelLogout()">No</button>
-      <button (click)="confirmLogout()">Yes</button>
+<!-- Logout Confirmation Modal -->
+<div *ngIf="showLogoutConfirm" class="modal show d-block" style="background: rgba(0,0,0,0.5);">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content">
+      <div class="modal-body text-center py-4">
+        <p class="mb-3">Are you sure you want to logout?</p>
+        <div class="d-flex justify-content-center gap-2">
+          <button class="btn btn-secondary" (click)="cancelLogout()">No</button>
+          <button class="btn btn-accent" (click)="confirmLogout()">Yes</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>

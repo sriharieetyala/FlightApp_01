@@ -1,63 +1,74 @@
-<div class="auth-container">
-  <div class="auth-card">
-    <div class="auth-header">
-      <h1>Create Account</h1>
-      <p>Sign up to get started</p>
-    </div>
-
-    <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" class="auth-form">
-      <div class="form-group">
-        <label for="username">Username</label>
-        <input type="text" id="username" formControlName="username" placeholder="Choose a username" />
+<div class="min-vh-100 d-flex align-items-center justify-content-center bg-light py-5">
+  <div class="card shadow-sm border-0" style="width: 100%; max-width: 420px;">
+    <div class="card-body p-4">
+      <!-- Header -->
+      <div class="text-center mb-4">
+        <h2 class="fw-bold mb-2">Create Account</h2>
+        <p class="text-muted">Sign up to get started</p>
       </div>
 
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input type="email" id="email" formControlName="email" placeholder="Enter your email" />
-      </div>
-
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" id="password" formControlName="password" placeholder="Create a strong password" />
-        <!-- Password requirements indicator -->
-        <div class="password-requirements">
-          <p class="requirements-title">Password must contain:</p>
-          <ul class="requirements-list">
-            <li>At least 6 characters</li>
-            <li>1 uppercase letter (A-Z)</li>
-            <li>1 lowercase letter (a-z)</li>
-            <li>1 special character (!@#$%^&* etc.)</li>
-          </ul>
+      <!-- Form -->
+      <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label for="username" class="form-label">Username</label>
+          <input type="text" id="username" class="form-control" formControlName="username"
+            placeholder="Choose a username" />
         </div>
+
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input type="email" id="email" class="form-control" formControlName="email" placeholder="Enter your email" />
+        </div>
+
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <input type="password" id="password" class="form-control" formControlName="password"
+            placeholder="Create a strong password" />
+
+          <!-- Password requirements -->
+          <div class="mt-2 small">
+            <p class="text-muted mb-1">Password must contain:</p>
+            <ul class="list-unstyled ps-3 text-muted small">
+              <li>• At least 6 characters</li>
+              <li>• 1 uppercase letter (A-Z)</li>
+              <li>• 1 lowercase letter (a-z)</li>
+              <li>• 1 special character (!@#$%^&* etc.)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="confirmPassword" class="form-label">Confirm Password</label>
+          <input type="password" id="confirmPassword" class="form-control" formControlName="confirmPassword"
+            placeholder="Confirm your password" />
+        </div>
+
+        <div class="mb-3">
+          <label for="adminSecret" class="form-label">Admin Secret (Optional)</label>
+          <input type="password" id="adminSecret" class="form-control" formControlName="adminSecret"
+            placeholder="Admin secret key (optional)" />
+        </div>
+
+        <!-- Error message -->
+        <div *ngIf="errorMessage" class="alert alert-danger py-2">
+          {{ errorMessage }}
+        </div>
+
+        <!-- Success message -->
+        <div *ngIf="successMessage" class="alert alert-success py-2">
+          {{ successMessage }}
+        </div>
+
+        <!-- Submit button -->
+        <button type="submit" class="btn btn-accent w-100 py-2" [disabled]="isLoading">
+          {{ isLoading ? 'Creating Account...' : 'Sign Up' }}
+        </button>
+      </form>
+
+      <!-- Footer -->
+      <div class="text-center mt-4">
+        <p class="mb-0">Already have an account? <a routerLink="/login" class="text-accent">Sign in</a></p>
       </div>
-
-      <div class="form-group">
-        <label for="confirmPassword">Confirm Password</label>
-        <input type="password" id="confirmPassword" formControlName="confirmPassword"
-          placeholder="Confirm your password" />
-      </div>
-
-      <div class="form-group">
-        <label for="adminSecret">Admin Secret (Optional)</label>
-        <input type="password" id="adminSecret" formControlName="adminSecret"
-          placeholder="Admin secret key (optional)" />
-      </div>
-
-      <div *ngIf="errorMessage" class="error-message">
-        {{ errorMessage }}
-      </div>
-
-      <div *ngIf="successMessage" class="success-message">
-        {{ successMessage }}
-      </div>
-
-      <button type="submit" class="submit-btn" [disabled]="isLoading">
-        {{ isLoading ? 'Creating Account...' : 'Sign Up' }}
-      </button>
-    </form>
-
-    <div class="auth-footer">
-      <p>Already have an account? <a routerLink="/login">Sign in</a></p>
     </div>
   </div>
 </div>

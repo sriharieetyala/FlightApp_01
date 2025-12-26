@@ -1,241 +1,42 @@
-/* Header - Natural minimalist styling */
-.header {
-  background: var(--bg-card, white);
-  border-bottom: 1px solid var(--border, #e8e4df);
-  position: sticky;
-  top: 0;
-  z-index: 1000;
+/* Custom accent color overrides for Bootstrap */
+.text-accent {
+  color: var(--accent, #c96442) !important;
 }
 
-.header-content {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 1rem 2.5rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.btn-accent {
+  background-color: var(--accent, #c96442);
+  border-color: var(--accent, #c96442);
+  color: white;
 }
 
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
-  text-decoration: none;
-  color: inherit;
+.btn-accent:hover {
+  background-color: var(--accent-hover, #a85236);
+  border-color: var(--accent-hover, #a85236);
+  color: white;
 }
 
-.logo-icon {
-  font-size: 1.75rem;
-}
-
-.logo-text {
-  font-size: 1.35rem;
-  font-weight: 700;
+.btn-outline-accent {
   color: var(--accent, #c96442);
-}
-
-.nav {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.auth-buttons {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.user-section {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.welcome-text {
-  color: var(--text-secondary, #6b6560);
-  font-size: 0.9rem;
-  font-weight: 500;
-}
-
-.menu-container {
-  position: relative;
-}
-
-.menu-btn {
-  width: 36px;
-  height: 36px;
+  border-color: var(--accent, #c96442);
   background: transparent;
-  border: 1px solid var(--border, #e8e4df);
-  border-radius: 8px;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  padding: 8px;
-  transition: background 0.15s;
 }
 
-.menu-btn:hover {
-  background: var(--bg-primary, #faf9f7);
+.btn-outline-accent:hover {
+  background-color: var(--accent, #c96442);
+  border-color: var(--accent, #c96442);
+  color: white;
 }
 
-.menu-line {
-  width: 18px;
-  height: 2px;
-  background: var(--text-secondary, #6b6560);
-  border-radius: 1px;
-}
-
-.user-dropdown {
-  position: absolute;
-  top: calc(100% + 8px);
-  right: 0;
-  background: var(--bg-card, white);
-  border-radius: 12px;
-  box-shadow: 0 8px 30px rgba(45, 42, 38, 0.15);
-  border: 1px solid var(--border, #e8e4df);
-  min-width: 180px;
-  overflow: hidden;
-  z-index: 1100;
-}
-
-.dropdown-item {
+/* Dropdown positioning */
+.dropdown-menu.show {
   display: block;
-  width: 100%;
-  padding: 0.85rem 1rem;
-  background: none;
-  border: none;
-  text-decoration: none;
-  color: var(--text-primary, #2d2a26);
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: background 0.15s;
-  text-align: left;
+  position: absolute;
+  right: 0;
 }
 
-.dropdown-item:hover {
-  background: var(--bg-primary, #faf9f7);
-}
-
-.dropdown-divider {
-  height: 1px;
-  background: var(--border, #e8e4df);
-  margin: 0.25rem 0;
-}
-
-.logout-item {
-  color: var(--error, #b54a4a);
-}
-
-.logout-item:hover {
-  background: #fdf6f6;
-}
-
-.btn {
-  padding: 0.5rem 1.25rem;
-  border-radius: 8px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  text-decoration: none;
-  cursor: pointer;
-  transition: all 0.15s;
-  border: 1.5px solid transparent;
-}
-
-.btn-primary {
-  background: var(--accent, #c96442);
-  color: white;
-  border: none;
-}
-
-.btn-primary:hover {
-  background: var(--accent-hover, #a85236);
-}
-
-.btn-outline {
-  background: transparent;
-  color: var(--accent, #c96442);
-  border: 1.5px solid var(--accent, #c96442);
-}
-
-.btn-outline:hover {
-  background: var(--accent, #c96442);
-  color: white;
-}
-
+/* Custom responsive */
 @media (max-width: 768px) {
-  .header-content {
-    padding: 0.75rem 1rem;
+  .navbar-brand span:last-child {
+    font-size: 1.1rem;
   }
-
-  .logo-text {
-    font-size: 1.15rem;
-  }
-
-  .welcome-text {
-    display: none;
-  }
-}
-
-/* Logout Dialog */
-.logout-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(45, 42, 38, 0.4);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 2000;
-}
-
-.logout-dialog {
-  background: var(--bg-card, white);
-  padding: 24px 28px;
-  border-radius: 12px;
-  text-align: center;
-}
-
-.logout-dialog p {
-  margin: 0 0 20px 0;
-  font-size: 15px;
-  color: var(--text-primary, #2d2a26);
-}
-
-.logout-actions {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-}
-
-.logout-actions button {
-  padding: 10px 22px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 500;
-}
-
-.logout-actions button:first-child {
-  background: var(--border, #e8e4df);
-  color: var(--text-primary, #2d2a26);
-}
-
-.logout-actions button:first-child:hover {
-  background: #ddd9d4;
-}
-
-.logout-actions button:last-child {
-  background: var(--accent, #c96442);
-  color: white;
-}
-
-.logout-actions button:last-child:hover {
-  background: var(--accent-hover, #a85236);
 }

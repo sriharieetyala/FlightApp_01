@@ -1,71 +1,93 @@
-<div class="dashboard-container">
-  <div class="search-section">
-    <h1 class="page-title">Flight Search</h1>
-    <div class="search-card">
-      <form (ngSubmit)="onSearch()" class="search-form">
-        <div *ngIf="errorMessage" class="error-message">
-          {{ errorMessage }}
-        </div>
-        <div *ngIf="infoMessage && !isSearching" class="info-message">
-          {{ infoMessage }}
-        </div>
-        <div *ngIf="sameCityError" class="same-city-error">
-          {{ sameCityError }}
-        </div>
-        <div class="form-row">
-          <div class="form-group autocomplete-container">
-            <input type="text" id="fromCity" [(ngModel)]="searchForm.fromCity" name="fromCity" placeholder="From"
-              (input)="onFromCityInput()" (focus)="onFromFocus()" (blur)="onFromBlur()" autocomplete="off" required />
-            <div *ngIf="showFromDropdown && filteredFromCities.length > 0" class="autocomplete-dropdown">
-              <div *ngFor="let city of filteredFromCities" class="autocomplete-item" (mousedown)="selectFromCity(city)">
-                {{ city }}
+<div class="page-container">
+  <div class="content-wrapper">
+    <!-- Search Section -->
+    <div class="mb-4">
+      <h1 class="page-title">Flight Search</h1>
+      <div class="card search-card">
+        <div class="card-body p-4">
+          <form (ngSubmit)="onSearch()">
+            <!-- Messages -->
+            <div *ngIf="errorMessage" class="alert alert-danger py-2 mb-3">{{ errorMessage }}</div>
+            <div *ngIf="infoMessage && !isSearching" class="alert alert-info py-2 mb-3">{{ infoMessage }}</div>
+            <div *ngIf="sameCityError" class="alert alert-warning py-2 mb-3">{{ sameCityError }}</div>
+
+            <!-- Search Form Row -->
+            <div class="row g-3 align-items-end">
+              <!-- From City -->
+              <div class="col-md-3 position-relative">
+                <label class="form-label">From</label>
+                <input type="text" class="form-control" [(ngModel)]="searchForm.fromCity" name="fromCity"
+                  placeholder="From" (input)="onFromCityInput()" (focus)="onFromFocus()" (blur)="onFromBlur()"
+                  autocomplete="off" required />
+                <div *ngIf="showFromDropdown && filteredFromCities.length > 0" class="autocomplete-dropdown">
+                  <div *ngFor="let city of filteredFromCities" class="autocomplete-item"
+                    (mousedown)="selectFromCity(city)">
+                    {{ city }}
+                  </div>
+                </div>
+              </div>
+
+              <!-- To City -->
+              <div class="col-md-3 position-relative">
+                <label class="form-label">To</label>
+                <input type="text" class="form-control" [(ngModel)]="searchForm.toCity" name="toCity" placeholder="To"
+                  (input)="onToCityInput()" (focus)="onToFocus()" (blur)="onToBlur()" autocomplete="off" required />
+                <div *ngIf="showToDropdown && filteredToCities.length > 0" class="autocomplete-dropdown">
+                  <div *ngFor="let city of filteredToCities" class="autocomplete-item" (mousedown)="selectToCity(city)">
+                    {{ city }}
+                  </div>
+                </div>
+              </div>
+
+              <!-- Date -->
+              <div class="col-md-3">
+                <label class="form-label">Date</label>
+                <input type="date" class="form-control" [(ngModel)]="searchForm.travelDate" name="travelDate"
+                  [min]="minDate" required />
+              </div>
+
+              <!-- Search Button -->
+              <div class="col-md-3">
+                <button type="submit" class="btn btn-accent w-100 py-2" [disabled]="isSearching || !isFormValid()">
+                  {{ isSearching ? 'Searching...' : 'Search Flights' }}
+                </button>
               </div>
             </div>
-          </div>
-          <div class="form-group autocomplete-container">
-            <input type="text" id="toCity" [(ngModel)]="searchForm.toCity" name="toCity" placeholder="To"
-              (input)="onToCityInput()" (focus)="onToFocus()" (blur)="onToBlur()" autocomplete="off" required />
-            <div *ngIf="showToDropdown && filteredToCities.length > 0" class="autocomplete-dropdown">
-              <div *ngFor="let city of filteredToCities" class="autocomplete-item" (mousedown)="selectToCity(city)">
-                {{ city }}
-              </div>
-            </div>
-          </div>
-          <div class="form-group">
-            <input type="date" id="travelDate" [(ngModel)]="searchForm.travelDate" name="travelDate" [min]="minDate"
-              required />
-          </div>
-          <button type="submit" class="search-btn" [disabled]="isSearching || !isFormValid()">
-            {{ isSearching ? 'Searching...' : 'Search' }}
+          </form>
+
+          <button *ngIf="!showAllFlights" (click)="loadAllFlights()" class="btn btn-outline-secondary mt-3">
+            Show All Flights
           </button>
         </div>
-      </form>
-      <button *ngIf="!showAllFlights" (click)="loadAllFlights()" class="show-all-btn">
-        Show All Flights
-      </button>
+      </div>
     </div>
-  </div>
 
-  <div class="flights-section">
-    <div class="section-header">
-      <h2 *ngIf="showAllFlights" class="section-title">Available Flights</h2>
-      <h2 *ngIf="!showAllFlights" class="section-title">Search Results</h2>
-      <button *ngIf="isAdmin" class="add-flight-btn" (click)="goToAddFlight()">
+    <!-- Results Section -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2 class="section-title">
+        {{ showAllFlights ? 'Available Flights' : 'Search Results' }}
+      </h2>
+      <button *ngIf="isAdmin" class="btn btn-success" (click)="goToAddFlight()">
         + Add Flight
       </button>
     </div>
 
-    <div *ngIf="getDisplayFlights().length === 0 && !isSearching" class="no-flights">
-      <p *ngIf="showAllFlights">No flights available at the moment.</p>
-      <p *ngIf="!showAllFlights">No flights available for your search criteria.</p>
+    <!-- No Flights Message -->
+    <div *ngIf="getDisplayFlights().length === 0 && !isSearching" class="alert alert-secondary">
+      <p *ngIf="showAllFlights" class="mb-0">No flights available at the moment.</p>
+      <p *ngIf="!showAllFlights" class="mb-0">No flights available for your search criteria.</p>
     </div>
 
+    <!-- Flight Cards Grid -->
     <div class="flights-grid">
       <div *ngFor="let flight of getDisplayFlights()" class="flight-card">
+        <!-- Header -->
         <div class="flight-header">
-          <div class="flight-number">{{ flight.flightNumber }}</div>
-          <div class="flight-price">₹{{ flight.cost | number:'1.0-0' }}</div>
+          <span class="flight-number">{{ flight.flightNumber }}</span>
+          <span class="flight-price">₹{{ flight.cost | number:'1.0-0' }}</span>
         </div>
+
+        <!-- Route -->
         <div class="flight-route">
           <div class="route-segment">
             <div class="city">{{ flight.fromCity }}</div>
@@ -77,12 +99,14 @@
             <div class="time">{{ formatDate(flight.arrivalTime) }}</div>
           </div>
         </div>
+
+        <!-- Footer -->
         <div class="flight-footer">
-          <div class="seats-available">
-            <span class="seats-label">Seats Available:</span>
+          <div class="seats-info">
+            <span class="seats-label">Seats:</span>
             <span class="seats-count">{{ flight.seatsAvailable }}</span>
           </div>
-          <button class="book-btn" (click)="openBooking(flight)">Book Now</button>
+          <button class="btn btn-accent btn-sm" (click)="openBooking(flight)">Book Now</button>
         </div>
       </div>
     </div>

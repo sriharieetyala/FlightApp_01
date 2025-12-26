@@ -1,80 +1,82 @@
-<div class="booking-history-page">
-  <div class="booking-history-container">
-    <button class="back-btn" (click)="goBack()">← Back</button>
+<div class="page-container">
+  <div class="content-wrapper">
 
-    <h1>Booking History</h1>
+    <button class="btn btn-outline-secondary mb-3" (click)="goBack()">← Back</button>
 
-    <!-- Success Message -->
-    <div *ngIf="successMessage" class="success-message">{{ successMessage }}</div>
+    <h1 class="page-title">Booking History</h1>
 
-    <!-- Loading State -->
-    <div *ngIf="isLoading" class="loading">Loading your bookings...</div>
+    <!-- Messages -->
+    <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
 
-    <!-- Error State -->
-    <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+    <!-- Loading -->
+    <div *ngIf="isLoading" class="loading-state">
+      <div class="spinner-border text-secondary"></div>
+      <p class="mt-2 text-muted">Loading your bookings...</p>
+    </div>
 
     <!-- No Bookings -->
     <div *ngIf="!isLoading && !errorMessage && bookings.length === 0" class="no-bookings">
-      <p>No booking history found.</p>
-      <p>Book your first flight to see it here!</p>
+      <p class="mb-1">No booking history found.</p>
+      <p class="mb-0">Book your first flight to see it here!</p>
     </div>
 
-    <!-- Booking Cards -->
-    <div *ngIf="!isLoading && bookings.length > 0" class="bookings-list">
-      <div class="booking-card" *ngFor="let booking of bookings" [ngClass]="{
+    <!-- Booking Cards Grid -->
+    <div *ngIf="!isLoading && bookings.length > 0" class="bookings-grid">
+      <div *ngFor="let booking of bookings" class="booking-card" [ngClass]="{
         'cancelled-card': booking.status === 'CANCELLED',
         'completed-card': booking.status !== 'CANCELLED' && isFlightDeparted(booking)
       }">
+        <!-- Header -->
         <div class="booking-header">
           <div class="header-left">
             <span class="pnr">PNR: {{ booking.pnr }}</span>
-            <span class="status" [ngClass]="getFlightStatusClass(booking)">
+            <span class="status-badge" [ngClass]="getFlightStatusClass(booking)">
               {{ getFlightStatusLabel(booking) }}
             </span>
           </div>
-          <!-- Show Cancel button only for upcoming bookings -->
-          <button *ngIf="canCancelBooking(booking)" class="cancel-btn-small" (click)="cancelBooking(booking)">
+          <button *ngIf="canCancelBooking(booking)" class="btn btn-outline-danger btn-sm"
+            (click)="cancelBooking(booking)">
             Cancel
           </button>
         </div>
 
-        <div class="booking-content">
-          <!-- Flight Info -->
-          <div class="flight-info-compact" *ngIf="booking.flight">
-            <div class="route-section">
-              <span class="city">{{ booking.flight.fromCity }}</span>
-              <span class="arrow">→</span>
-              <span class="city">{{ booking.flight.toCity }}</span>
-            </div>
-            <div class="flight-details-row">
-              <span><strong>{{ booking.flight.flightNumber }}</strong></span>
-              <span>{{ booking.flight.departureTime | date:'short' }}</span>
-            </div>
+        <!-- Flight Info -->
+        <div class="booking-content" *ngIf="booking.flight">
+          <div class="route-info">
+            <span class="city">{{ booking.flight.fromCity }}</span>
+            <span class="arrow">→</span>
+            <span class="city">{{ booking.flight.toCity }}</span>
           </div>
-          <div class="flight-info-compact" *ngIf="!booking.flight">
-            <p><strong>Flight ID:</strong> {{ booking.flightId }}</p>
+          <div class="flight-details">
+            <span class="flight-num">{{ booking.flight.flightNumber }}</span>
+            <span class="separator">•</span>
+            <span>{{ booking.flight.departureTime | date:'short' }}</span>
           </div>
+        </div>
+        <div class="booking-content" *ngIf="!booking.flight">
+          <p class="text-muted mb-0">Flight ID: {{ booking.flightId }}</p>
+        </div>
 
-          <!-- Passenger Info Compact -->
-          <div class="passenger-info-compact">
-            <span>{{ booking.passengerName }}</span>
-            <span>•</span>
-            <span>{{ booking.numberOfTickets }} ticket{{ booking.numberOfTickets > 1 ? 's' : '' }}</span>
-            <span>•</span>
-            <span>{{ booking.meal }}</span>
-          </div>
+        <!-- Passenger Info -->
+        <div class="passenger-info">
+          <span>{{ booking.passengerName }}</span>
+          <span class="separator">•</span>
+          <span>{{ booking.numberOfTickets }} ticket{{ booking.numberOfTickets > 1 ? 's' : '' }}</span>
+          <span class="separator">•</span>
+          <span>{{ booking.meal }}</span>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Confirmation Dialog Overlay -->
+  <!-- Confirmation Modal -->
   <div *ngIf="showConfirmDialog" class="confirm-overlay">
     <div class="confirm-dialog">
       <p>Are you sure you want to cancel this booking?</p>
       <div class="confirm-actions">
-        <button class="btn-no" (click)="closeConfirmDialog()" [disabled]="isCancelling">No</button>
-        <button class="btn-yes" (click)="confirmCancel()" [disabled]="isCancelling">
+        <button class="btn btn-secondary" (click)="closeConfirmDialog()" [disabled]="isCancelling">No</button>
+        <button class="btn btn-danger" (click)="confirmCancel()" [disabled]="isCancelling">
           {{ isCancelling ? 'Cancelling...' : 'Yes' }}
         </button>
       </div>
