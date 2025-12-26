@@ -1,59 +1,39 @@
 <div class="page-container">
   <div class="content-wrapper">
-    <div class="booking-card">
+    <h2 class="page-title">Book Flight</h2>
 
-      <h2 class="page-title">Book Flight</h2>
+    <!-- Loading -->
+    <div *ngIf="isLoading" class="loading-state">
+      <p>Loading flight details...</p>
+    </div>
 
-      <!-- Loading -->
-      <div *ngIf="isLoading" class="loading-state">
-        <p>Loading flight details...</p>
-      </div>
+    <!-- Flight Info -->
+    <div *ngIf="!isLoading && flight" class="flight-info-box">
+      <p><strong>Flight:</strong> {{ flight.flightNumber }}</p>
+      <p><strong>Route:</strong> {{ flight.fromCity }} → {{ flight.toCity }}</p>
+      <p><strong>Price:</strong> ₹{{ flight.cost }} per passenger</p>
+    </div>
 
-      <!-- Flight Info -->
-      <div *ngIf="!isLoading && flight" class="flight-info-box">
-        <p><strong>Flight:</strong> {{ flight.flightNumber }}</p>
-        <p><strong>Route:</strong> {{ flight.fromCity }} → {{ flight.toCity }}</p>
-        <p><strong>Price:</strong> ₹{{ flight.cost }} per passenger</p>
-      </div>
+    <!-- Success Message -->
+    <div *ngIf="successMessage" class="success-message">
+      {{ successMessage }}
+      <br><br>
+      <button class="btn-primary" (click)="goBack()">Go to Home</button>
+    </div>
 
-      <!-- Success Message -->
-      <div *ngIf="successMessage" class="success-message">
-        {{ successMessage }}
-        <br><br>
-        <button class="btn-primary" (click)="goBack()">Go to Home</button>
-      </div>
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
 
-      <!-- Error Message -->
-      <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+    <!-- Two Column Layout: Form on left, Seats on right -->
+    <form *ngIf="!isLoading && flight && !successMessage" (ngSubmit)="submitBooking()" class="booking-layout">
 
-      <!-- Form -->
-      <form *ngIf="!isLoading && flight && !successMessage" (ngSubmit)="submitBooking()">
-
+      <!-- LEFT COLUMN: Form -->
+      <div class="form-column">
         <!-- Number of Passengers -->
         <div class="form-group">
           <label>Number of Passengers</label>
           <input type="number" [(ngModel)]="numberOfPassengers" name="numberOfPassengers" min="1" max="10"
             (change)="onPassengerCountChange()" />
-        </div>
-
-        <!-- Seat Selection Grid -->
-        <div class="seat-section">
-          <h4>Select Seats ({{ selectedSeats.length }}/{{ numberOfPassengers }})</h4>
-          <div class="seat-legend">
-            <span><span class="seat-box available"></span> Available</span>
-            <span><span class="seat-box booked"></span> Booked</span>
-            <span><span class="seat-box selected"></span> Selected</span>
-          </div>
-          <div class="seat-grid">
-            <div *ngFor="let row of getSeatRows()" class="seat-row">
-              <ng-container *ngFor="let seat of row">
-                <div *ngIf="seat === 'AISLE'" class="aisle"></div>
-                <div *ngIf="seat !== 'AISLE'" class="seat" [ngClass]="getSeatStatus(seat)" (click)="onSeatClick(seat)">
-                  {{ seat }}
-                </div>
-              </ng-container>
-            </div>
-          </div>
         </div>
 
         <!-- Email -->
@@ -111,7 +91,29 @@
             {{ isSubmitting ? 'Booking...' : 'Confirm Booking' }}
           </button>
         </div>
-      </form>
-    </div>
+      </div>
+
+      <!-- RIGHT COLUMN: Seat Grid -->
+      <div class="seat-column">
+        <div class="seat-section">
+          <h4>Select Seats ({{ selectedSeats.length }}/{{ numberOfPassengers }})</h4>
+          <div class="seat-legend">
+            <span><span class="seat-box available"></span> Available</span>
+            <span><span class="seat-box booked"></span> Booked</span>
+            <span><span class="seat-box selected"></span> Selected</span>
+          </div>
+          <div class="seat-grid">
+            <div *ngFor="let row of getSeatRows()" class="seat-row">
+              <ng-container *ngFor="let seat of row">
+                <div *ngIf="seat === 'AISLE'" class="aisle"></div>
+                <div *ngIf="seat !== 'AISLE'" class="seat" [ngClass]="getSeatStatus(seat)" (click)="onSeatClick(seat)">
+                  {{ seat }}
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
   </div>
 </div>

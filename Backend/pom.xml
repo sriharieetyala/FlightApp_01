@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.flightapp</groupId>
+    <artifactId>flightapp-backend</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+
+    <name>Flight App Backend</name>
+    <description>Root POM to build all backend microservices with one command</description>
+
+    <modules>
+        <module>config-server</module>
+        <module>service-registry</module>
+        <module>api-gateway</module>
+        <module>auth-service</module>
+        <module>booking-service</module>
+        <module>email-service</module>
+        <module>flight-service</module>
+    </modules>
+</project>
