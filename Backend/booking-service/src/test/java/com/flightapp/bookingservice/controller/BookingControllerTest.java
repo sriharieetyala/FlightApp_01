@@ -28,104 +28,105 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest
 class BookingControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+        @Autowired
+        private MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper mapper;
+        @Autowired
+        private ObjectMapper mapper;
 
-    @MockBean
-    private BookingService service;
+        @MockBean
+        private BookingService service;
 
-    @Test
-    void bookTicket_success_returnsCreated() throws Exception {
-        BookingRequest req = new BookingRequest(
-                10,
-                "Hari",
-                25,
-                GENDER.MALE,
-                MEAL.VEG,
-                "hari@test.com",
-                1
-        );
+        @Test
+        void bookTicket_success_returnsCreated() throws Exception {
+                BookingRequest req = BookingRequest.builder()
+                                .flightId(10)
+                                .passengerName("Hari")
+                                .age(25)
+                                .gender(GENDER.MALE)
+                                .meal(MEAL.VEG)
+                                .email("hari@test.com")
+                                .numberOfTickets(1)
+                                .seatNumber("1")
+                                .build();
 
-        Booking booking = Booking.builder()
-                .id(1)
-                .flightId(10)
-                .passengerName("Hari")
-                .age(25)
-                .gender(GENDER.MALE)
-                .meal(MEAL.VEG)
-                .email("hari@test.com")
-                .numberOfTickets(1)
-                .status("BOOKED")
-                .pnr("PNR123")
-                .build();
+                Booking booking = Booking.builder()
+                                .id(1)
+                                .flightId(10)
+                                .passengerName("Hari")
+                                .age(25)
+                                .gender(GENDER.MALE)
+                                .meal(MEAL.VEG)
+                                .email("hari@test.com")
+                                .numberOfTickets(1)
+                                .status("BOOKED")
+                                .pnr("PNR123")
+                                .build();
 
-        when(service.bookTicket(any(BookingRequest.class))).thenReturn(booking);
+                when(service.bookTicket(any(BookingRequest.class))).thenReturn(booking);
 
-        mockMvc.perform(post("/bookings")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(req)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.pnr").value("PNR123"));
-    }
+                mockMvc.perform(post("/bookings")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(mapper.writeValueAsString(req)))
+                                .andExpect(status().isCreated())
+                                .andExpect(jsonPath("$.id").value(1))
+                                .andExpect(jsonPath("$.pnr").value("PNR123"));
+        }
 
-    @Test
-    void getByEmail_returnsList() throws Exception {
-        Booking b = new Booking();
-        when(service.getBookingsByEmail("hari@test.com")).thenReturn(List.of(b));
+        @Test
+        void getByEmail_returnsList() throws Exception {
+                Booking b = new Booking();
+                when(service.getBookingsByEmail("hari@test.com")).thenReturn(List.of(b));
 
-        mockMvc.perform(get("/bookings/email/hari@test.com"))
-                .andExpect(status().isOk());
-    }
+                mockMvc.perform(get("/bookings/email/hari@test.com"))
+                                .andExpect(status().isOk());
+        }
 
-    @Test
-    void getById_returnsBooking() throws Exception {
-        Booking b = new Booking();
-        when(service.getBookingById(1)).thenReturn(b);
+        @Test
+        void getById_returnsBooking() throws Exception {
+                Booking b = new Booking();
+                when(service.getBookingById(1)).thenReturn(b);
 
-        mockMvc.perform(get("/bookings/id/1"))
-                .andExpect(status().isOk());
-    }
+                mockMvc.perform(get("/bookings/id/1"))
+                                .andExpect(status().isOk());
+        }
 
-    @Test
-    void getByPnr_returnsBooking() throws Exception {
-        Booking b = new Booking();
-        when(service.getBookingByPnr("PNR123")).thenReturn(b);
+        @Test
+        void getByPnr_returnsBooking() throws Exception {
+                Booking b = new Booking();
+                when(service.getBookingByPnr("PNR123")).thenReturn(b);
 
-        mockMvc.perform(get("/bookings/pnr/PNR123"))
-                .andExpect(status().isOk());
-    }
+                mockMvc.perform(get("/bookings/pnr/PNR123"))
+                                .andExpect(status().isOk());
+        }
 
-    @Test
-    void cancelBooking_success() throws Exception {
-        Booking b = new Booking(); // mock returned booking
-        when(service.cancelBooking(1)).thenReturn(b);
+        @Test
+        void cancelBooking_success() throws Exception {
+                Booking b = new Booking(); // mock returned booking
+                when(service.cancelBooking(1)).thenReturn(b);
 
-        mockMvc.perform(delete("/bookings/1"))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Booking cancelled successfully"));
-    }
+                mockMvc.perform(delete("/bookings/1"))
+                                .andExpect(status().isOk())
+                                .andExpect(content().string("Booking cancelled successfully"));
+        }
 
-    // ✅ Exception tests for GlobalExceptionHandler
+        // ✅ Exception tests for GlobalExceptionHandler
 
-    @Test
-    void getBookingById_notFound_returns404() throws Exception {
-        when(service.getBookingById(1)).thenThrow(new BookingNotFoundException("Booking not found"));
+        @Test
+        void getBookingById_notFound_returns404() throws Exception {
+                when(service.getBookingById(1)).thenThrow(new BookingNotFoundException("Booking not found"));
 
-        mockMvc.perform(get("/bookings/id/1"))
-                .andExpect(status().isNotFound())
-                .andExpect(content().string("Booking not found"));
-    }
+                mockMvc.perform(get("/bookings/id/1"))
+                                .andExpect(status().isNotFound())
+                                .andExpect(content().string("Booking not found"));
+        }
 
-    @Test
-    void cancelBooking_invalid_returns400() throws Exception {
-        when(service.cancelBooking(1)).thenThrow(new BookingInvalidException("Cannot cancel"));
+        @Test
+        void cancelBooking_invalid_returns400() throws Exception {
+                when(service.cancelBooking(1)).thenThrow(new BookingInvalidException("Cannot cancel"));
 
-        mockMvc.perform(delete("/bookings/1"))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string("Cannot cancel"));
-    }
+                mockMvc.perform(delete("/bookings/1"))
+                                .andExpect(status().isBadRequest())
+                                .andExpect(content().string("Cannot cancel"));
+        }
 }

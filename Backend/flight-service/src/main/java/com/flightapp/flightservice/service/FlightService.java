@@ -16,4 +16,7 @@ public interface FlightService {
     FlightResponse getFlightById(Integer id);
 
     List<FlightResponse> searchFlight(SearchFlightRequest request);
+
+    // Reduce seats after booking
+    void reduceSeats(Integer flightId, Integer count);
 }

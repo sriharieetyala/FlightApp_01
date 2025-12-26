@@ -128,4 +128,21 @@ public class FlightServiceImpl implements FlightService {
         res.setSeatsAvailable(f.getSeatsAvailable());
         return res;
     }
+
+    // ================= REDUCE SEATS =================
+    @Override
+    public void reduceSeats(Integer flightId, Integer count) {
+        Flight flight = repo.findById(flightId)
+                .orElseThrow(() -> new FlightNotFoundException("Flight Not Found"));
+        
+        if (flight.getSeatsAvailable() < count) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Not enough seats available"
+            );
+        }
+        
+        flight.setSeatsAvailable(flight.getSeatsAvailable() - count);
+        repo.save(flight);
+    }
 }

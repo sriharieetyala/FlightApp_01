@@ -35,4 +35,8 @@ public class BookingRequest {
     @NotNull(message = "Number of tickets required")
     @Min(value = 1)
     private Integer numberOfTickets;
+
+    // Seat number selected by passenger
+    @NotBlank(message = "Seat number is required")
+    private String seatNumber;
 }

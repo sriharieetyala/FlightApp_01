@@ -1,7 +1,5 @@
 package com.flightapp.bookingservice;
 
-
-
 import com.flightapp.bookingservice.dto.request.BookingRequest;
 import com.flightapp.bookingservice.entity.Booking;
 import com.flightapp.bookingservice.exception.BookingInvalidException;
@@ -48,9 +46,10 @@ public class ExtraCoverageTests {
                 .passengerName("Alice")
                 .age(28)
                 .gender(null) // edge case
-                .meal(null)   // edge case
+                .meal(null) // edge case
                 .email("alice@example.com")
                 .numberOfTickets(2)
+                .seatNumber("5")
                 .build();
     }
 

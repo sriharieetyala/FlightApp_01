@@ -27,7 +27,6 @@ public class BookingController {
                 .body(new BookingResponse(booking.getId(), booking.getPnr()));
     }
 
-
     @GetMapping("/email/{email}")
     public ResponseEntity<List<Booking>> getByEmail(@PathVariable String email) {
         return ResponseEntity.ok(service.getBookingsByEmail(email));
@@ -43,10 +42,15 @@ public class BookingController {
         return ResponseEntity.ok(service.getBookingByPnr(pnr));
     }
 
-
     @DeleteMapping("/{id}")
     public ResponseEntity<String> cancelBooking(@PathVariable Integer id) {
         service.cancelBooking(id);
         return ResponseEntity.ok("Booking cancelled successfully");
+    }
+
+    // Get list of booked seat numbers for a flight
+    @GetMapping("/flight/{flightId}/seats")
+    public ResponseEntity<List<String>> getBookedSeats(@PathVariable Integer flightId) {
+        return ResponseEntity.ok(service.getBookedSeats(flightId));
     }
 }

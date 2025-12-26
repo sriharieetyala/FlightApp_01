@@ -1,6 +1,5 @@
 package com.flightapp.flightservice.controller;
 
-
 import com.flightapp.flightservice.dto.request.AddFlightRequest;
 import com.flightapp.flightservice.dto.request.SearchFlightRequest;
 import com.flightapp.flightservice.dto.response.AddFlightResponse;
@@ -44,7 +43,13 @@ public class FlightController {
         return ResponseEntity.ok(response);
     }
 
-
-
+    // Reduce seats after booking (called by booking-service)
+    @PutMapping("/{id}/seats")
+    public ResponseEntity<Void> reduceSeats(
+            @PathVariable Integer id,
+            @RequestParam("reduce") Integer count) {
+        service.reduceSeats(id, count);
+        return ResponseEntity.ok().build();
+    }
 
 }

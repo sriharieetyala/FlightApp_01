@@ -7,8 +7,15 @@ import java.util.List;
 
 public interface BookingService {
     Booking bookTicket(BookingRequest request);
+
     Booking getBookingById(Integer id);
+
     List<Booking> getBookingsByEmail(String email);
+
     Booking cancelBooking(Integer id);
-    Booking getBookingByPnr(String pnr); // new
+
+    Booking getBookingByPnr(String pnr);
+
+    // Get list of booked seat numbers for a flight
+    List<String> getBookedSeats(Integer flightId);
 }

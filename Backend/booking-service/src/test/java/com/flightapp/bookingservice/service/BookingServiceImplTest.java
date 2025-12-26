@@ -47,6 +47,7 @@ class BookingServiceImplTest {
                 .meal(null)
                 .email("alice@example.com")
                 .numberOfTickets(2)
+                .seatNumber("1")
                 .build();
     }
 
@@ -60,7 +61,7 @@ class BookingServiceImplTest {
 
         Booking savedBooking = Booking.builder()
                 .id(55)
-                .pnr(UUID.randomUUID().toString().substring(0,8).toUpperCase())
+                .pnr(UUID.randomUUID().toString().substring(0, 8).toUpperCase())
                 .status("BOOKED")
                 .email("alice@example.com")
                 .build();

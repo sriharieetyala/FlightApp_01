@@ -23,57 +23,58 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(BookingController.class)
 class GlobalExceptionHandlerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+        @Autowired
+        private MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper mapper;
+        @Autowired
+        private ObjectMapper mapper;
 
-    @MockBean
-    private BookingService service;
+        @MockBean
+        private BookingService service;
 
-    @Test
-    void handleValidationException_returnsBadRequest() throws Exception {
-        // empty request triggers validation errors
-        BookingRequest invalidReq = new BookingRequest();
+        @Test
+        void handleValidationException_returnsBadRequest() throws Exception {
+                // empty request triggers validation errors
+                BookingRequest invalidReq = new BookingRequest();
 
-        mockMvc.perform(post("/bookings")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(invalidReq)))
-                .andExpect(status().isBadRequest())
-                // just check that some validation message is present
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("required")));
-    }
+                mockMvc.perform(post("/bookings")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(mapper.writeValueAsString(invalidReq)))
+                                .andExpect(status().isBadRequest())
+                                // just check that some validation message is present
+                                .andExpect(content().string(org.hamcrest.Matchers.containsString("required")));
+        }
 
-    @Test
-    void handleBookingNotFoundException_returnsNotFound() throws Exception {
-        when(service.getBookingById(999))
-                .thenThrow(new BookingNotFoundException("Booking not found"));
+        @Test
+        void handleBookingNotFoundException_returnsNotFound() throws Exception {
+                when(service.getBookingById(999))
+                                .thenThrow(new BookingNotFoundException("Booking not found"));
 
-        mockMvc.perform(get("/bookings/id/999"))
-                .andExpect(status().isNotFound())
-                .andExpect(content().string("Booking not found"));
-    }
+                mockMvc.perform(get("/bookings/id/999"))
+                                .andExpect(status().isNotFound())
+                                .andExpect(content().string("Booking not found"));
+        }
 
-    @Test
-    void handleBookingInvalidException_returnsBadRequest() throws Exception {
-        BookingRequest validReq = new BookingRequest(
-                1,
-                "Alice",
-                25,
-                GENDER.FEMALE,
-                MEAL.VEG,
-                "alice@test.com",
-                1
-        );
+        @Test
+        void handleBookingInvalidException_returnsBadRequest() throws Exception {
+                BookingRequest validReq = BookingRequest.builder()
+                                .flightId(1)
+                                .passengerName("Alice")
+                                .age(25)
+                                .gender(GENDER.FEMALE)
+                                .meal(MEAL.VEG)
+                                .email("alice@test.com")
+                                .numberOfTickets(1)
+                                .seatNumber("1")
+                                .build();
 
-        when(service.bookTicket(any()))
-                .thenThrow(new BookingInvalidException("Invalid booking"));
+                when(service.bookTicket(any()))
+                                .thenThrow(new BookingInvalidException("Invalid booking"));
 
-        mockMvc.perform(post("/bookings")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(validReq)))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string("Invalid booking"));
-    }
+                mockMvc.perform(post("/bookings")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(mapper.writeValueAsString(validReq)))
+                                .andExpect(status().isBadRequest())
+                                .andExpect(content().string("Invalid booking"));
+        }
 }

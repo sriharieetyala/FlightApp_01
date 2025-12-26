@@ -17,6 +17,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +25,7 @@ public class BookingServiceImpl implements BookingService {
 
     private final BookingRepository repo;
     private final FlightServiceClient flightClient;
-    private final RabbitMQProducer producer;     //  ADDED
+    private final RabbitMQProducer producer;
 
     private static final String FLIGHT_CB = "flightServiceCB";
 
@@ -49,19 +50,22 @@ public class BookingServiceImpl implements BookingService {
                 .meal(request.getMeal())
                 .email(request.getEmail())
                 .numberOfTickets(request.getNumberOfTickets())
+                .seatNumber(request.getSeatNumber()) // Save selected seat
                 .status("BOOKED")
                 .pnr(pnr)
                 .build();
 
         Booking saved = repo.save(booking);
 
+        // -------------- REDUCE SEATS IN FLIGHT SERVICE ----------------
+        flightClient.reduceSeats(request.getFlightId(), request.getNumberOfTickets());
+
         // -------------- SEND EMAIL MESSAGE TO RABBITMQ ----------------
-        String emailMessage =
-                " Booking Confirmed!\n" +
-                        "PNR: " + pnr + "\n" +
-                        "Passenger: " + request.getPassengerName() + "\n" +
-                        "Email: " + request.getEmail() + "\n" +
-                        "Tickets: " + request.getNumberOfTickets();
+        String emailMessage = " Booking Confirmed!\n" +
+                "PNR: " + pnr + "\n" +
+                "Passenger: " + request.getPassengerName() + "\n" +
+                "Seat: " + request.getSeatNumber() + "\n" +
+                "Email: " + request.getEmail();
 
         producer.sendBookingEmail(emailMessage);
 
@@ -109,5 +113,15 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public List<Booking> getBookingsByEmail(String email) {
         return repo.findByEmail(email);
+    }
+
+    @Override
+    public List<String> getBookedSeats(Integer flightId) {
+        // Get all BOOKED bookings for this flight and extract seat numbers
+        return repo.findByFlightIdAndStatus(flightId, "BOOKED")
+                .stream()
+                .map(Booking::getSeatNumber)
+                .filter(seat -> seat != null && !seat.isEmpty())
+                .collect(Collectors.toList());
     }
 }

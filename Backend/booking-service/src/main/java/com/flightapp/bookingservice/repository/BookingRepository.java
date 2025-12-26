@@ -8,6 +8,11 @@ import java.util.Optional;
 
 public interface BookingRepository extends JpaRepository<Booking, Integer> {
     Optional<Booking> findById(Integer id);
+
     List<Booking> findByEmail(String email);
-    Optional<Booking> findByPnr(String pnr); // new
+
+    Optional<Booking> findByPnr(String pnr);
+
+    // Get all bookings for a flight to find booked seats
+    List<Booking> findByFlightIdAndStatus(Integer flightId, String status);
 }

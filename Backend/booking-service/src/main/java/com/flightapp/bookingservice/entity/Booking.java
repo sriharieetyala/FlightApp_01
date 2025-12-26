@@ -30,6 +30,9 @@ public class Booking {
     private String email;
     private Integer numberOfTickets;
 
+    // Seat number selected by passenger (e.g., "1", "2", ..., "30")
+    private String seatNumber;
+
     private String status; // BOOKED / CANCELLED
 
     @Column(unique = true, nullable = false)
