@@ -35,24 +35,21 @@ public class FlightServiceImpl implements FlightService {
         if (req.getFromCity().equalsIgnoreCase(req.getToCity())) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
-                    "From city and To city cannot be the same"
-            );
+                    "From city and To city cannot be the same");
         }
 
         // Departure time must not be in the past
         if (req.getDepartureTime().isBefore(LocalDateTime.now())) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
-                    "Departure time cannot be in the past"
-            );
+                    "Departure time cannot be in the past");
         }
 
         // Arrival must be after departure
         if (req.getArrivalTime().isBefore(req.getDepartureTime())) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
-                    "Arrival time must be after departure time"
-            );
+                    "Arrival time must be after departure time");
         }
 
         Flight flight = Flight.builder()
@@ -94,20 +91,17 @@ public class FlightServiceImpl implements FlightService {
         LocalDateTime startOfDay = req.getTravelDate().atStartOfDay();
         LocalDateTime endOfDay = req.getTravelDate().atTime(23, 59, 59);
 
-        List<Flight> flights =
-                repo.findByFromCityAndToCityAndDepartureTimeBetween(
-                        req.getFromCity(),
-                        req.getToCity(),
-                        startOfDay,
-                        endOfDay
-                );
+        List<Flight> flights = repo.findByFromCityIgnoreCaseAndToCityIgnoreCaseAndDepartureTimeBetween(
+                req.getFromCity(),
+                req.getToCity(),
+                startOfDay,
+                endOfDay);
 
         if (flights.isEmpty()) {
             throw new FlightNotFoundException(
                     "No flights found from " + req.getFromCity()
                             + " to " + req.getToCity()
-                            + " on " + req.getTravelDate()
-            );
+                            + " on " + req.getTravelDate());
         }
 
         return flights.stream()
@@ -134,14 +128,13 @@ public class FlightServiceImpl implements FlightService {
     public void reduceSeats(Integer flightId, Integer count) {
         Flight flight = repo.findById(flightId)
                 .orElseThrow(() -> new FlightNotFoundException("Flight Not Found"));
-        
+
         if (flight.getSeatsAvailable() < count) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
-                    "Not enough seats available"
-            );
+                    "Not enough seats available");
         }
-        
+
         flight.setSeatsAvailable(flight.getSeatsAvailable() - count);
         repo.save(flight);
     }

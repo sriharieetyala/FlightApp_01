@@ -120,7 +120,7 @@ class FlightServiceImplTest {
                 .departureTime(travelDate.atTime(10, 0)).arrivalTime(travelDate.atTime(12, 0))
                 .cost(100).seatsAvailable(50).build();
 
-        when(repo.findByFromCityAndToCityAndDepartureTimeBetween("A", "B", startOfDay, endOfDay))
+        when(repo.findByFromCityIgnoreCaseAndToCityIgnoreCaseAndDepartureTimeBetween("A", "B", startOfDay, endOfDay))
                 .thenReturn(List.of(flight));
 
         List<FlightResponse> resList = service.searchFlight(req);
@@ -143,7 +143,7 @@ class FlightServiceImplTest {
         req.setToCity("B");
         req.setTravelDate(travelDate);
 
-        when(repo.findByFromCityAndToCityAndDepartureTimeBetween("A", "B", startOfDay, endOfDay))
+        when(repo.findByFromCityIgnoreCaseAndToCityIgnoreCaseAndDepartureTimeBetween("A", "B", startOfDay, endOfDay))
                 .thenReturn(Collections.emptyList());
 
         assertThrows(FlightNotFoundException.class, () -> service.searchFlight(req));

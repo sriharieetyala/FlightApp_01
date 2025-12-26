@@ -1,13 +1,13 @@
-/* Page Container with gaps */
+/* Page Container - aligns with header */
 .page-container {
   min-height: calc(100vh - 70px);
   background: var(--bg-primary, #faf9f7);
-  padding: 2rem 2.5rem;
 }
 
 .content-wrapper {
   max-width: 1400px;
   margin: 0 auto;
+  padding: 2rem 2.5rem;
 }
 
 .page-title {

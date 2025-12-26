@@ -11,10 +11,10 @@ import java.util.Optional;
 public interface FlightRepository extends JpaRepository<Flight, Integer> {
     Optional<Flight> findByFlightNumber(String flightNumber);
 
-    List<Flight> findByFromCityAndToCityAndDepartureTimeBetween(
+    // Case-insensitive city search
+    List<Flight> findByFromCityIgnoreCaseAndToCityIgnoreCaseAndDepartureTimeBetween(
             String fromCity,
             String toCity,
             LocalDateTime start,
-            LocalDateTime end
-    );
+            LocalDateTime end);
 }

@@ -184,11 +184,15 @@ export class BookingComponent implements OnInit {
     });
   }
 
-  // Get rows for seat grid display
+  // Get rows for seat grid display (with aisle in middle)
   getSeatRows(): string[][] {
     const rows: string[][] = [];
     for (let i = 0; i < this.allSeats.length; i += SEATS_PER_ROW) {
-      rows.push(this.allSeats.slice(i, i + SEATS_PER_ROW));
+      const rowSeats = this.allSeats.slice(i, i + SEATS_PER_ROW);
+      // Insert "AISLE" marker after 3rd seat (between seats 3 and 4)
+      const leftSeats = rowSeats.slice(0, 3);
+      const rightSeats = rowSeats.slice(3, 6);
+      rows.push([...leftSeats, 'AISLE', ...rightSeats]);
     }
     return rows;
   }
