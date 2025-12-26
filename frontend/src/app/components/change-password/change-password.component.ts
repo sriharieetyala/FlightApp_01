@@ -42,15 +42,35 @@ export class ChangePasswordComponent implements OnInit {
         const expiredFlag = localStorage.getItem('passwordExpired');
         if (expiredFlag === 'true') {
             this.isPasswordExpired = true;
-            // Don't remove flag yet - remove after successful password change
         }
+    }
+
+    // Password strength validation helpers (same as signup)
+    get hasMinLength(): boolean {
+        return this.newPassword.length >= 6;
+    }
+
+    get hasUppercase(): boolean {
+        return /[A-Z]/.test(this.newPassword);
+    }
+
+    get hasLowercase(): boolean {
+        return /[a-z]/.test(this.newPassword);
+    }
+
+    get hasSpecialChar(): boolean {
+        return /[!@#$%^&*(),.?":{}|<>_\-+=\[\]\\/~`]/.test(this.newPassword);
+    }
+
+    get isPasswordStrong(): boolean {
+        return this.hasMinLength && this.hasUppercase && this.hasLowercase && this.hasSpecialChar;
     }
 
     // Check if form is valid before submitting
     isFormValid(): boolean {
         return (
             this.currentPassword.length > 0 &&
-            this.newPassword.length >= 6 &&
+            this.isPasswordStrong &&
             this.newPassword !== this.currentPassword &&
             this.newPassword === this.confirmPassword
         );
@@ -58,8 +78,8 @@ export class ChangePasswordComponent implements OnInit {
 
     // Show validation errors while typing
     getPasswordError(): string {
-        if (this.newPassword.length > 0 && this.newPassword.length < 6) {
-            return 'Password must be at least 6 characters';
+        if (this.newPassword.length > 0 && !this.isPasswordStrong) {
+            return 'Password does not meet all requirements';
         }
         if (this.newPassword.length > 0 && this.newPassword === this.currentPassword) {
             return 'New password must be different from current password';

@@ -155,3 +155,140 @@ h1 {
   color: var(--text-secondary, #6b6560);
   margin: 0;
 }
+
+/* Passengers section */
+.passengers-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.passenger-card {
+  background: var(--bg-primary, #faf9f7);
+  border: 1px solid var(--border, #e8e4df);
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.passenger-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary, #2d2a26);
+  margin: 0 0 12px 0;
+}
+
+.form-row {
+  display: flex;
+  gap: 12px;
+}
+
+.form-group.half {
+  flex: 1;
+}
+
+.total-price {
+  padding: 12px;
+  background: var(--bg-primary, #faf9f7);
+  border-radius: 8px;
+  text-align: right;
+  font-size: 16px;
+  color: var(--text-primary, #2d2a26);
+}
+
+/* Seat Selection Grid */
+.seat-section {
+  background: var(--bg-primary, #faf9f7);
+  border: 1px solid var(--border, #e8e4df);
+  border-radius: 10px;
+  padding: 16px;
+  margin: 10px 0;
+}
+
+.seat-section h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary, #2d2a26);
+  margin: 0 0 12px 0;
+}
+
+.seat-legend {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 12px;
+  font-size: 12px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.seat-box {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+}
+
+.seat-box.available {
+  background: #d1d5db;
+}
+
+.seat-box.booked {
+  background: #ef4444;
+}
+
+.seat-box.selected {
+  background: #22c55e;
+}
+
+.seat-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.seat-row {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.seat {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.seat.available {
+  background: #d1d5db;
+  color: #374151;
+}
+
+.seat.available:hover {
+  transform: scale(1.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.seat.booked {
+  background: #ef4444;
+  color: white;
+  cursor: not-allowed;
+}
+
+.seat.selected {
+  background: #22c55e;
+  color: white;
+}
+
+.seat.selected:hover {
+  transform: scale(1.1);
+}
